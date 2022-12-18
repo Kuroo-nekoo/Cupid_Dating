@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <!-- top navigation -->
+    <include layout="@layout/layout_top_navigation_view" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="12dp"
+                android:padding="5dp"
+                android:src="@drawable/ic_back"
+                android:id="@+id/ivBack"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/tvName"/>
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="20"
+            android:id="@+id/rcvChat"
+            app:stackFromEnd="true">
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom">
+
+            <com.final_mad.datingapp.datingapp.customfonts.EditTextMedium
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:id="@+id/etInputMessage"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="12dp"
+                android:layout_gravity="bottom|left"
+                android:hint="Type a message"
+                android:layout_weight="9"/>
+                <FrameLayout
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/lySend"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="12dp"
+                    android:layout_gravity="right|bottom"
+                    android:background="@drawable/ic_send">
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginLeft="4dp"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_send"
+                        android:tint="@color/white" />
+                </FrameLayout>
+            </LinearLayout>
+            <ProgressBar
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center"
+                android:visibility="invisible"
+                android:id="@+id/progressBar"/>
+        </FrameLayout>
+
+</LinearLayout>
+
