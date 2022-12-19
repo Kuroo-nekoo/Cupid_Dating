@@ -3,10 +3,14 @@ package com.final_mad.datingapp.datingapp.Utils;
 import android.content.Context;
 import android.content.Intent;
 import androidx.annotation.NonNull;
+
+import com.final_mad.datingapp.datingapp.Matched.RecentConversationActivity;
+import com.final_mad.datingapp.datingapp.Matched.RecentConversationAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.google.firebase.auth.internal.RecaptchaActivity;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.final_mad.datingapp.datingapp.Main.MainActivity;
 import com.final_mad.datingapp.datingapp.Matched.Matched_Activity;
@@ -48,7 +52,10 @@ public class TopNavigationViewHelper {
                     case R.id.ic_matched:
                         Intent intent3 = new Intent(context, Matched_Activity.class);
                         context.startActivity(intent3);
-
+                        break;
+                    case R.id.ic_recent:
+                        Intent intent4 = new Intent(context, RecentConversationActivity.class);
+                        context.startActivity(intent4);
                         break;
                 }
 

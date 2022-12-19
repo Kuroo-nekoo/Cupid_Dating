@@ -15,7 +15,10 @@ import com.final_mad.datingapp.datingapp.Utils.PreferenceManager;
 import com.final_mad.datingapp.datingapp.Utils.User;
 import com.final_mad.datingapp.datingapp.databinding.ActivityChatBinding;
 import com.final_mad.datingapp.datingapp.models.ChatMessage;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -29,13 +32,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends BaseActivity {
     private ActivityChatBinding binding;
     private User receiveUser;
     private List<ChatMessage> chatMessageList;
     private ChatAdapter chatAdapter;
     private PreferenceManager preferenceManager;
     private FirebaseFirestore firestore;
+    private String conversationId = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +80,20 @@ public class ChatActivity extends AppCompatActivity {
             message.put(Constants.KEY_MESSAGE, binding.etInputMessage.getText().toString());
             message.put(Constants.KEY_TIMESTAMP, new Date());
             firestore.collection(Constants.KEY_COLLECTION_CHAT).add(message);
+            if (conversationId != null) {
+                updateConversation(binding.etInputMessage.getText().toString());
+            } else {
+                HashMap<String, Object> conversation = new HashMap<>();
+                conversation.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
+                conversation.put(Constants.KEY_SENDER_NAME, preferenceManager.getString(Constants.KEY_SENDER_NAME));
+                conversation.put(Constants.KEY_SENDER_IMAGE, preferenceManager.getString(Constants.KEY_USER_PROFILE_IMAGE));
+                conversation.put(Constants.KEY_RECEIVE_ID, receiveUser.getUser_id());
+                conversation.put(Constants.KEY_RECEIVER_NAME, receiveUser.getUsername());
+                conversation.put(Constants.KEY_RECEIVER_IMAGE, receiveUser.getProfileImage());
+                conversation.put(Constants.KEY_LAST_MESSAGE, binding.etInputMessage.getText().toString());
+                conversation.put(Constants.KEY_TIMESTAMP, new Date());
+                addConversation(conversation );
+            }
             binding.etInputMessage.setText(null);
         } catch (Exception e) {
             Log.d("Send Messge", e.getMessage());
@@ -146,5 +164,48 @@ public class ChatActivity extends AppCompatActivity {
             binding.rcvChat.setVisibility(View.VISIBLE);
         }
         binding.progressBar.setVisibility(View.GONE);
+        if (conversationId == null) {
+            checkForConversation();
+        }
+    };
+
+    private void checkForConversation() {
+        if(chatMessageList.size() != 0) {
+            checkForConverationRemotely(
+                    preferenceManager.getString(Constants.KEY_USER_ID),
+                    receiveUser.getUser_id()
+            );
+            checkForConverationRemotely(
+                    receiveUser.getUser_id(),
+                    preferenceManager.getString(Constants.KEY_USER_ID)
+            );
+        }
+    }
+
+    private void addConversation(HashMap<String, Object> conversation) {
+        firestore.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
+                .add(conversation)
+                .addOnSuccessListener(documentReference -> conversationId = documentReference.getId());
+    }
+
+    private void updateConversation(String message) {
+        DocumentReference documentReference = firestore.collection(Constants.KEY_COLLECTION_CONVERSATIONS).document(conversationId);
+        documentReference.update(Constants.KEY_LAST_MESSAGE, message,
+                Constants.KEY_TIMESTAMP, new Date());
+    }
+
+    private void checkForConverationRemotely(String senderId, String receiverId) {
+        firestore.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
+                .whereEqualTo(Constants.KEY_SENDER_ID, senderId)
+                .whereEqualTo(Constants.KEY_RECEIVE_ID, receiverId)
+                .get()
+                .addOnCompleteListener(conversationOnCompleteLister);
+    }
+
+    private final OnCompleteListener<QuerySnapshot> conversationOnCompleteLister = task -> {
+        if (task.isSuccessful() && task.getResult() != null && task.getResult().getDocuments().size() > 0) {
+            DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
+            conversationId = documentSnapshot.getId();
+        }
     };
 }

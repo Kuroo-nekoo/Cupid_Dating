@@ -228,9 +228,7 @@ public class MainActivity extends Activity {
     }
 
 
-    /**
-     * setup top tool bar
-     */
+
     private void setupTopNavigationView() {
         Log.d(TAG, "setupTopNavigationView: setting up TopNavigationView");
         BottomNavigationViewEx tvEx = findViewById(R.id.topNavViewBar);

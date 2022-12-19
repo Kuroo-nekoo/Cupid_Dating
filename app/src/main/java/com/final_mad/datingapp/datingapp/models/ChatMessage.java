@@ -9,6 +9,34 @@ public class ChatMessage {
     private String dateTime;
     private Date dateObject;
 
+    public String getConversationId() {
+        return conversationId;
+    }
+
+    public void setConversationId(String conversationId) {
+        this.conversationId = conversationId;
+    }
+
+    public String getConversationName() {
+        return conversationName;
+    }
+
+    public void setConversationName(String conversationName) {
+        this.conversationName = conversationName;
+    }
+
+    public String getConversationImage() {
+        return conversationImage;
+    }
+
+    public void setConversationImage(String conversationImage) {
+        this.conversationImage = conversationImage;
+    }
+
+    private String conversationId;
+    private String conversationName;
+    private String conversationImage;
+
     public Date getDateObject() {
         return dateObject;
     }

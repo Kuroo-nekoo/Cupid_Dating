@@ -25,6 +25,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".Matched.RecentConversationActivity"
+            android:exported="true">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".Matched.ChatActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize">

@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 import com.final_mad.datingapp.datingapp.Listeners.UserListener;
 import com.final_mad.datingapp.datingapp.Utils.Constants;
 import com.final_mad.datingapp.datingapp.Utils.PreferenceManager;
+import com.final_mad.datingapp.datingapp.models.ChatMessage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -34,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Matched_Activity extends AppCompatActivity implements UserListener {
+public class Matched_Activity extends BaseActivity implements UserListener {
 
     private static final String TAG = "Matched_Activity";
     private static final int ACTIVITY_NUM = 2;
@@ -52,12 +53,15 @@ public class Matched_Activity extends AppCompatActivity implements UserListener 
     private ProgressBar progressBar;
     private PreferenceManager preferenceManager;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_matched);
         preferenceManager = new PreferenceManager(getApplicationContext());
         progressBar = findViewById(R.id.progressBar);
+
+
 
         setupTopNavigationView();
         searchFunc();
