@@ -1,6 +1,5 @@
 package com.final_mad.datingapp.datingapp.Matched;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.graphics.Bitmap;
@@ -9,6 +8,7 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.final_mad.datingapp.datingapp.Utils.Constants;
 import com.final_mad.datingapp.datingapp.Utils.PreferenceManager;
@@ -25,12 +25,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class ChatActivity extends BaseActivity {
     private ActivityChatBinding binding;
@@ -40,6 +40,7 @@ public class ChatActivity extends BaseActivity {
     private PreferenceManager preferenceManager;
     private FirebaseFirestore firestore;
     private String conversationId = null;
+    private Boolean isReceiverAvailable = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +53,36 @@ public class ChatActivity extends BaseActivity {
         listenMessages();
     }
 
+    private void listenAvailabilityOfReceiver() {
+        firestore.collection(Constants.KEY_COLLECTION_USERS).document(receiveUser.getUser_id())
+                .addSnapshotListener(ChatActivity.this, ((value, error) -> {
+                    if (error != null) {
+                        return;
+                    }
+                    if (value != null) {
+                        if (value.getLong(Constants.KEY_AVAILABILITY) != null) {
+                            int availability = Objects.requireNonNull(
+                                    value.getLong(Constants.KEY_AVAILABILITY)
+                            ).intValue();
+                            isReceiverAvailable = availability == 1;
+                        }
+                        receiveUser.setToken(value.getString(Constants.KEY_FCM_TOKEN));
+                    }
+                    if (isReceiverAvailable) {
+                        binding.tvAvailability.setVisibility(View.VISIBLE);
+                    } else {
+                        binding.tvAvailability.setVisibility(View.GONE);
+                    }
+                }));
+    }
+
     private void loadReceiverDetails() {
         receiveUser = (User) getIntent().getSerializableExtra(Constants.KEY_USER);
         binding.tvName.setText(receiveUser.getUsername());
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
     private void init () {
@@ -208,4 +236,10 @@ public class ChatActivity extends BaseActivity {
             conversationId = documentSnapshot.getId();
         }
     };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        listenAvailabilityOfReceiver();
+    }
 }

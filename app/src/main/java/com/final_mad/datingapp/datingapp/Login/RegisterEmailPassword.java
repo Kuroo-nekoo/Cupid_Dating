@@ -101,9 +101,9 @@ public class RegisterEmailPassword extends AppCompatActivity {
 //                    //find geo location
 //                    //find geo location
 //                    Location location = gps.getLocation();
-//                    double latitude = 37.349642;
-//                    double longtitude = -121.938987;
-//                    if (location != null) {
+//                    d-121.938987;
+//                    if (location != nullouble latitude = 37.349642;
+////                    double longtitude = ) {
 //                        latitude = location.getLatitude();
 //                        longtitude = location.getLongitude();
 //                    }

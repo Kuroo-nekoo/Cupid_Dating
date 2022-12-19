@@ -5,12 +5,10 @@ import android.content.Intent;
 import androidx.annotation.NonNull;
 
 import com.final_mad.datingapp.datingapp.Matched.RecentConversationActivity;
-import com.final_mad.datingapp.datingapp.Matched.RecentConversationAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.util.Log;
 import android.view.MenuItem;
 
-import com.google.firebase.auth.internal.RecaptchaActivity;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.final_mad.datingapp.datingapp.Main.MainActivity;
 import com.final_mad.datingapp.datingapp.Matched.Matched_Activity;

@@ -12,7 +12,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.final_mad.datingapp.datingapp.R;
 import com.final_mad.datingapp.datingapp.Utils.CalculateAge;
 import com.final_mad.datingapp.datingapp.Utils.User;

@@ -1,7 +1,5 @@
 package com.final_mad.datingapp.datingapp.Matched;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
