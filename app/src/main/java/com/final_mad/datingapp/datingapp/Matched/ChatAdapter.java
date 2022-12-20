@@ -16,12 +16,16 @@ import com.final_mad.datingapp.datingapp.models.ChatMessage;
 import java.util.List;
 
 public class ChatAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    private final Bitmap receiverProfileImage;
+    private Bitmap receiverProfileImage;
     private final List<ChatMessage> chatMessageList;
     private final String senderId;
 
     public static final int VIEW_TYPE_SENT = 1;
     public static final int VIEW_TYPE_RECEIVED = 2;
+
+    public void setReceiverProfileImage(Bitmap bitmap) {
+        receiverProfileImage = bitmap;
+    }
 
     public ChatAdapter( List<ChatMessage> chatMessageList,Bitmap receiverProfileImage, String senderId) {
         this.receiverProfileImage = receiverProfileImage;
@@ -88,7 +92,9 @@ public class ChatAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
         void setData(ChatMessage chatMessage, Bitmap receiverProfileImage) {
             binding.tvMessage.setText(chatMessage.getMessage());
             binding.tvDateTime.setText(chatMessage.getDateTime());
-            binding.ivProfile.setImageBitmap(receiverProfileImage);
+            if (receiverProfileImage != null) {
+                binding.ivProfile.setImageBitmap(receiverProfileImage);
+            }
         }
     }
 }

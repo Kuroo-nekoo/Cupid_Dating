@@ -40,7 +40,7 @@ import java.util.List;
 
 public class MainActivity extends Activity {
     private static final String TAG = "MainActivity";
-    private static final int ACTIVITY_NUM = 1;
+    private static final int ACTIVITY_NUM = 2;
     final private int MY_PERMISSIONS_REQUEST_LOCATION = 123;
     ListView listView;
     List<Cards> rowItems;
@@ -51,6 +51,7 @@ public class MainActivity extends Activity {
     private PhotoAdapter arrayAdapter;
     private FirebaseFirestore firestore;
     private PreferenceManager preferenceManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +67,8 @@ public class MainActivity extends Activity {
         PulsatorLayout mPulsator = findViewById(R.id.pulsator);
         mPulsator.start();
         mNotificationHelper = new NotificationHelper(this);
+        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PackageManager.PERMISSION_GRANTED);
+
 
 
         setupTopNavigationView();
@@ -254,6 +257,7 @@ public class MainActivity extends Activity {
     }
 
     private void updateToken(String token) {
+        preferenceManager.putString(Constants.KEY_FCM_TOKEN, token);
         DocumentReference documentReference = firestore.collection(Constants.KEY_COLLECTION_USERS).document(preferenceManager.getString(Constants.KEY_USER_ID));
         documentReference.update(Constants.KEY_FCM_TOKEN, token)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -269,4 +273,5 @@ public class MainActivity extends Activity {
                     }
                 });
     }
+
 }

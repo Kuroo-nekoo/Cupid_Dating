@@ -2,6 +2,7 @@ package com.final_mad.datingapp.datingapp.Login;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -69,12 +70,26 @@ public class RegisterEmailPassword extends AppCompatActivity {
                 email = mEmail.getText().toString();
                 password = mPassword.getText().toString();
                 confirmPassword = mConfirmPassword.getText().toString();
+                Location location = gps.getLocation();
+
 
                 if (checkInputs(email, password, confirmPassword)) {
                     email = mEmail.getText().toString();
                     password = mPassword.getText().toString();
+
+
+                    double latitude = 10.518650;
+                    double longitude = 105.232930;
+                    if (location != null) {
+                        latitude = location.getLatitude();
+                        longitude = location.getLongitude();
+                    }
+
                     user.setEmail(email);
                     user.setPassword(password);
+                    user.setLatitude(latitude);
+                    user.setLongitude(longitude);
+
                     firestore.collection("users").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                         @Override
                         public void onSuccess(DocumentReference documentReference) {
@@ -96,17 +111,8 @@ public class RegisterEmailPassword extends AppCompatActivity {
                 }
             }
         });
-//                    Toast.makeText(getApplicationContext(), "validate success", Toast.LENGTH_LONG).show();
-//
-//                    //find geo location
-//                    //find geo location
-//                    Location location = gps.getLocation();
-//                    d-121.938987;
-//                    if (location != nullouble latitude = 37.349642;
-////                    double longtitude = ) {
-//                        latitude = location.getLatitude();
-//                        longtitude = location.getLongitude();
-//                    }
+
+
 //                    Log.d("Location==>", longtitude + "   " + latitude);
 //
 //

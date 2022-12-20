@@ -29,7 +29,7 @@ public class RecentConversationActivity extends BaseActivity {
     private FirebaseFirestore firestore;
     private ActivityRecentConversationBinding binding;
     private static final String TAG = "RecentActivity";
-    private static final int ACTIVITY_NUM = 3;
+    private static final int ACTIVITY_NUM = 4;
     private final Context mContext = RecentConversationActivity.this;
 
 
@@ -55,7 +55,7 @@ public class RecentConversationActivity extends BaseActivity {
     private void init () {
         preferenceManager = new PreferenceManager(getApplicationContext());
         conversationList = new ArrayList<>();
-        recentConversationAdapter = new RecentConversationAdapter(conversationList);
+        recentConversationAdapter = new RecentConversationAdapter(conversationList, getApplicationContext());
         binding.rcvRecentConversation.setAdapter(recentConversationAdapter);
         firestore = FirebaseFirestore.getInstance();
     }

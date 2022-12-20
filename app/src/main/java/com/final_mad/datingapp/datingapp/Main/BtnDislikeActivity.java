@@ -14,16 +14,11 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.final_mad.datingapp.datingapp.R;
 import com.final_mad.datingapp.datingapp.Utils.TopNavigationViewHelper;
 
-/**
- * DatingApp
- * https://github.com/quintuslabs/DatingApp
- * Created on 25-sept-2018.
- * Created by : Santosh Kumar Dash:- http://santoshdash.epizy.com
- */
+
 
 public class BtnDislikeActivity extends AppCompatActivity {
     private static final String TAG = "BtnDislikeActivity";
-    private static final int ACTIVITY_NUM = 1;
+    private static final int ACTIVITY_NUM = 2;
     private Context mContext = BtnDislikeActivity.this;
     private ImageView dislike;
 

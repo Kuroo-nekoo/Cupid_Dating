@@ -9,12 +9,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import androidx.core.app.ActivityCompat;
 
-/**
- * DatingApp
- * https://github.com/quintuslabs/DatingApp
- * Created on 25-sept-2018.
- * Created by : Santosh Kumar Dash:- http://santoshdash.epizy.com
- */
 
 public class GPS implements LocationListener {
     Context mContext;
@@ -63,19 +57,19 @@ public class GPS implements LocationListener {
         return mlocation;
     }
 
-    public int calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+    public double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
         double theta = lon1 - lon2;
         double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
         dist = Math.acos(dist);
         dist = rad2deg(dist);
         dist = dist * 60 * 1.1515;
 
-        int dis = (int) Math.floor(dist);
-        if (dis < 1) {
-            return 1;
-        }
+//        int dis = (int) Math.floor(dist);
+//        if (dis < 1) {
+//            return 1;
+//        }
 
-        return dis;
+        return dist;
     }
 
     private double deg2rad(double deg) {

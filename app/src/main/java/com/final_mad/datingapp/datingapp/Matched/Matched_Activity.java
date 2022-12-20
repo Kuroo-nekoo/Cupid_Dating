@@ -36,7 +36,7 @@ import java.util.List;
 public class Matched_Activity extends BaseActivity implements UserListener {
 
     private static final String TAG = "Matched_Activity";
-    private static final int ACTIVITY_NUM = 2;
+    private static final int ACTIVITY_NUM = 3;
     List<Users> matchList = new ArrayList<>();
     List<User> copyList = new ArrayList<>();
     private Context mContext = Matched_Activity.this;

@@ -5,6 +5,7 @@ import android.content.Intent;
 import androidx.annotation.NonNull;
 
 import com.final_mad.datingapp.datingapp.Matched.RecentConversationActivity;
+import com.final_mad.datingapp.datingapp.Nearby.NearbyActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.util.Log;
 import android.view.MenuItem;
@@ -15,12 +16,7 @@ import com.final_mad.datingapp.datingapp.Matched.Matched_Activity;
 import com.final_mad.datingapp.datingapp.Profile.Profile_Activity;
 import com.final_mad.datingapp.datingapp.R;
 
-/**
- * DatingApp
- * https://github.com/quintuslabs/DatingApp
- * Created on 25-sept-2018.
- * Created by : Santosh Kumar Dash:- http://santoshdash.epizy.com
- */
+
 
 public class TopNavigationViewHelper {
 
@@ -54,6 +50,11 @@ public class TopNavigationViewHelper {
                     case R.id.ic_recent:
                         Intent intent4 = new Intent(context, RecentConversationActivity.class);
                         context.startActivity(intent4);
+                        break;
+
+                    case R.id.ic_nearby:
+                        Intent intent5 = new Intent(context, NearbyActivity.class);
+                        context.startActivity(intent5);
                         break;
                 }
 

@@ -17,10 +17,28 @@ public class User implements Serializable {
     private String preferSex;
     private String dateOfBirth;
     private double latitude;
-    private double longtitude;
+    private double longitude;
     private String password;
     private String token;
     private String profileImage;
+    private double distance;
+    private boolean isAvailable;
+
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+
+    public void setAvailable(boolean available) {
+        isAvailable = available;
+    }
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
 
     public String getProfileImage() {
         return profileImage;
@@ -63,7 +81,7 @@ public class User implements Serializable {
         this.preferSex = preferSex;
         this.dateOfBirth = dateOfBirth;
         this.latitude = latitude;
-        this.longtitude = longtitude;
+        this.longitude = longtitude;
 
     }
 
@@ -75,12 +93,12 @@ public class User implements Serializable {
         this.latitude = latitude;
     }
 
-    public double getLongtitude() {
-        return longtitude;
+    public double getLongitude() {
+        return longitude;
     }
 
-    public void setLongtitude(double longtitude) {
-        this.longtitude = longtitude;
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
 

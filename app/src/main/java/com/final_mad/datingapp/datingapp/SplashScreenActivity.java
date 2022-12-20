@@ -1,8 +1,13 @@
 package com.final_mad.datingapp.datingapp;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -44,7 +49,6 @@ public class SplashScreenActivity extends AppCompatActivity {
         fade_in.setDuration(3000);     // animation duration in milliseconds
         fade_in.setFillAfter(true);    // If fillAfter is true, the transformation that this animation performed will persist when it is finished.
         findViewById(R.id.imageView).startAnimation(fade_in);
-
 
         new Timer().schedule(new TimerTask() {
             @Override
