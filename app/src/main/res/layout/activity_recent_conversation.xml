@@ -26,15 +26,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/searchBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:drawableLeft="@drawable/ic_search"
-                    android:drawablePadding="10dp"
-                    android:hint="Search Here..."
-                    android:textSize="18dp" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"

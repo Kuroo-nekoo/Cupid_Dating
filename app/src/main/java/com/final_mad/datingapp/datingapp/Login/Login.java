@@ -20,6 +20,7 @@ import com.final_mad.datingapp.datingapp.Main.MainActivity;
 import com.final_mad.datingapp.datingapp.R;
 import com.final_mad.datingapp.datingapp.Utils.Constants;
 import com.final_mad.datingapp.datingapp.Utils.PreferenceManager;
+import com.final_mad.datingapp.datingapp.customfonts.ButtonSemiBold;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -40,7 +41,7 @@ public class Login extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private EditText user_email;
     private EditText user_password;
-    private AppCompatButton btn_sign_in;
+    private ButtonSemiBold btn_sign_in;
     private TextView sign_up;
     private TextView tvForgot;
     private ProgressBar progressBar;
@@ -57,6 +58,7 @@ public class Login extends AppCompatActivity {
         mPassword = findViewById(R.id.input_password);
         tvForgot = findViewById(R.id.tvForgotPassword);
         progressBar = findViewById(R.id.progressBar);
+        btn_sign_in = findViewById(R.id.btn_login);
         mContext = Login.this;
         preferenceManager = new PreferenceManager(getApplicationContext());
         if (preferenceManager.getBoolean(Constants.KEY_IS_SIGNED_IN)) {
@@ -78,9 +80,8 @@ public class Login extends AppCompatActivity {
     private void init() {
         mAuth = FirebaseAuth.getInstance();
         //initialize the button for logging in
-        Button btnLogin = findViewById(R.id.btn_login);
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
+        btn_sign_in.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -99,16 +100,27 @@ public class Login extends AppCompatActivity {
                             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful() && task.getResult() != null && task.getResult().getDocumentChanges().size() > 0) {
-                                        DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
-                                        preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
-                                        preferenceManager.putString(Constants.KEY_USER_ID, documentSnapshot.getId());
-                                        preferenceManager.putString(Constants.KEY_USER_NAME, documentSnapshot.getString(Constants.KEY_USER_NAME));
-                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                        startActivity(intent);
-                                    } else {
-                                        loading(false);
-                                        Toast.makeText(getApplicationContext(), "Unable to sign in", Toast.LENGTH_LONG).show();
+                                    try {
+
+
+                                        if (task.isSuccessful() && task.getResult() != null && task.getResult().getDocumentChanges().size() > 0) {
+                                            try {
+                                                DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
+                                                preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
+                                                preferenceManager.putString(Constants.KEY_USER_ID, documentSnapshot.getId());
+                                                preferenceManager.putString(Constants.KEY_USER_NAME, documentSnapshot.getString(Constants.KEY_USER_NAME));
+                                                Intent intent = new Intent(getApplicationContext(), MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                startActivity(intent);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+
+                                        } else {
+                                            loading(false);
+                                            Toast.makeText(getApplicationContext(), "Unable to sign in", Toast.LENGTH_LONG).show();
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
                                     }
                                 }
                             });

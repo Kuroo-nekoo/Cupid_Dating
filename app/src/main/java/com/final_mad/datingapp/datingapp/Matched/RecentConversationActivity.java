@@ -6,15 +6,19 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.annotation.Nullable;
+
 import com.final_mad.datingapp.datingapp.R;
 import com.final_mad.datingapp.datingapp.Utils.Constants;
 import com.final_mad.datingapp.datingapp.Utils.PreferenceManager;
 import com.final_mad.datingapp.datingapp.Utils.TopNavigationViewHelper;
+import com.final_mad.datingapp.datingapp.Utils.User;
 import com.final_mad.datingapp.datingapp.databinding.ActivityRecentConversationBinding;
 import com.final_mad.datingapp.datingapp.models.ChatMessage;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
@@ -30,6 +34,7 @@ public class RecentConversationActivity extends BaseActivity {
     private ActivityRecentConversationBinding binding;
     private static final String TAG = "RecentActivity";
     private static final int ACTIVITY_NUM = 4;
+//    private List<User> onlineUserList;
     private final Context mContext = RecentConversationActivity.this;
 
 
@@ -51,6 +56,40 @@ public class RecentConversationActivity extends BaseActivity {
                 .whereEqualTo(Constants.KEY_RECEIVE_ID, preferenceManager.getString(Constants.KEY_USER_ID))
                 .addSnapshotListener(eventListener);
     }
+
+//    private void listenUserAvailability() {
+//        firestore.collection(Constants.KEY_COLLECTION_USERS)
+//                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+//                        if (error != null) {
+//                            return;
+//                        }
+//                        if (value != null) {
+//                            for (DocumentChange documentChange: value.getDocumentChanges()) {
+//                                if (documentChange.getType() == DocumentChange.Type.MODIFIED) {
+//                                    boolean isOnline = documentChange.getDocument().getBoolean(Constants.KEY_AVAILABILITY);
+//                                    User user = new User();
+//                                    user.setUsername(documentChange.getDocument().getString(Constants.KEY_USER_NAME));
+//                                    user.setEmail(documentChange.getDocument().getString(Constants.KEY_USER_EMAIL));
+//                                    user.setProfileImage(documentChange.getDocument().getString(Constants.KEY_USER_PROFILE_IMAGE));
+//                                    user.setToken(documentChange.getDocument().getString(Constants.KEY_FCM_TOKEN));
+//                                    double latitude = documentChange.getDocument().getDouble(Constants.KEY_USER_LATITUDE);
+//                                    double longitude = documentChange.getDocument().getDouble(Constants.KEY_USER_LONGITUDE);
+//                                    user.setLatitude(latitude);
+//                                    user.setLongitude(longitude);
+//                                    user.setAvailable(documentChange.getDocument().getBoolean(Constants.KEY_AVAILABILITY));
+//                                    user.setDateOfBirth(documentChange.getDocument().getString(Constants.KEY_USER_DATA_OF_BIRTH));
+//                                    user.setUser_id(documentChange.getDocument().getId());
+////                                    if(isOnline && onlineUserList.) {
+//
+//                                    }
+//                                 }
+//                            }
+//                        }
+//                    }
+//                });
+//    }
 
     private void init () {
         preferenceManager = new PreferenceManager(getApplicationContext());
@@ -108,7 +147,6 @@ public class RecentConversationActivity extends BaseActivity {
             }
             Collections.sort(conversationList, (obj1, obj2) -> obj2.getDateObject().compareTo(obj1.getDateObject()));
             recentConversationAdapter.notifyDataSetChanged();
-
         }
     };
 }

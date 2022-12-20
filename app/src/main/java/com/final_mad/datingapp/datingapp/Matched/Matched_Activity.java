@@ -56,32 +56,11 @@ public class Matched_Activity extends BaseActivity implements UserListener {
         setContentView(R.layout.activity_matched);
         preferenceManager = new PreferenceManager(getApplicationContext());
         progressBar = findViewById(R.id.progressBar);
-
-
+        mRecyclerView = findViewById(R.id.matche_recycler_view);
 
         setupTopNavigationView();
         searchFunc();
         getUsers();
-
-        recyclerView = findViewById(R.id.active_recycler_view);
-        mRecyclerView = findViewById(R.id.matche_recycler_view);
-        progressBar = findViewById(R.id.progressBar);
-        adapter = new ActiveUserAdapter(usersList, getApplicationContext());
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(adapter);
-        prepareActiveData();
-
-//        mAdapter = new MatchUserAdapter(matchList, getApplicationContext());
-        RecyclerView.LayoutManager mLayoutManager1 = new LinearLayoutManager(getApplicationContext());
-        mRecyclerView.setLayoutManager(mLayoutManager1);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.setAdapter(mAdapter);
-
-        prepareMatchData();
-
-
     }
 
     private void prepareActiveData() {
@@ -204,26 +183,37 @@ public class Matched_Activity extends BaseActivity implements UserListener {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         loading(false);
                         String currentUserId = preferenceManager.getString(Constants.KEY_USER_ID);
-                        if (task.isSuccessful() && task.getResult() != null) {
-                            List<User> users = new ArrayList<>();
-                            for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
-                                if (currentUserId.equals(queryDocumentSnapshot.getId())) {
-                                    continue;
+                        try {
+                            if (task.isSuccessful() && task.getResult() != null) {
+                                List<User> users = new ArrayList<>();
+                                for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
+                                    if (currentUserId.equals(queryDocumentSnapshot.getId())) {
+                                        continue;
+                                    }
+                                    try {
+                                        User user = new User();
+                                        user.setUsername(queryDocumentSnapshot.getString(Constants.KEY_USER_NAME));
+                                        user.setEmail(queryDocumentSnapshot.getString(Constants.KEY_USER_EMAIL));
+                                        user.setProfileImage(queryDocumentSnapshot.getString(Constants.KEY_USER_PROFILE_IMAGE));
+                                        user.setToken(queryDocumentSnapshot.getString(Constants.KEY_FCM_TOKEN));
+                                        user.setUser_id(queryDocumentSnapshot.getId());
+                                        users.add(user);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+
                                 }
-                                User user = new User();
-                                user.setUsername(queryDocumentSnapshot.getString(Constants.KEY_USER_NAME));
-                                user.setEmail(queryDocumentSnapshot.getString(Constants.KEY_USER_EMAIL));
-                                user.setProfileImage(queryDocumentSnapshot.getString(Constants.KEY_USER_PROFILE_IMAGE));
-                                user.setToken(queryDocumentSnapshot.getString(Constants.KEY_FCM_TOKEN));
-                                user.setUser_id(queryDocumentSnapshot.getId());
-                                users.add(user);
+                                if (users.size() > 0) {
+                                    MatchUserAdapter matchUserAdapter = new MatchUserAdapter(users, getApplicationContext(), Matched_Activity.this);
+                                    mRecyclerView.setAdapter(matchUserAdapter);
+                                    mRecyclerView.setVisibility(View.VISIBLE);
+                                    matchUserAdapter.notifyDataSetChanged();
+                                }
                             }
-                            if (users.size() > 0) {
-                                MatchUserAdapter matchUserAdapter = new MatchUserAdapter(users, getApplicationContext(), Matched_Activity.this);
-                                mRecyclerView.setAdapter(matchUserAdapter);
-                                mRecyclerView.setVisibility(View.VISIBLE);
-                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
+
                     }
                 });
     }

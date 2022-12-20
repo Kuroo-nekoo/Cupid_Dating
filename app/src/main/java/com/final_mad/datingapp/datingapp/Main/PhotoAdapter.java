@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +18,11 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.final_mad.datingapp.datingapp.R;
+import com.final_mad.datingapp.datingapp.Utils.CalculateAge;
 import com.final_mad.datingapp.datingapp.Utils.User;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +54,7 @@ public class PhotoAdapter extends ArrayAdapter<User> {
 
     public View getView(final int position, View convertView, ViewGroup parent) {
         final User user = getItem(position);
+        CalculateAge calculateAge = new CalculateAge(user.getDateOfBirth());
 
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item, parent, false);
@@ -59,12 +64,15 @@ public class PhotoAdapter extends ArrayAdapter<User> {
         ImageView image = convertView.findViewById(R.id.image);
         ImageButton btnInfo = convertView.findViewById(R.id.checkInfoBeforeMatched);
 
-        name.setText(user.getUsername() + ", " + user.getDateOfBirth());
+        name.setText(user.getUsername() + ", " + Integer.toString(calculateAge.getAge()));
         btnInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, ProfileCheckinMain.class);
-                intent.putExtra("name", user.getUsername() + ", " + user.getDateOfBirth());
+                CalculateAge calculateAge = new CalculateAge(user.getDateOfBirth());
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    intent.putExtra("name", user.getUsername() + ", " + Integer.toString(calculateAge.getAge()));
+                }
                 intent.putExtra("photo", user.getProfileImage());
                 intent.putExtra("bio", user.getUsername());
                 intent.putExtra("interest", user.getUsername());
@@ -73,7 +81,6 @@ public class PhotoAdapter extends ArrayAdapter<User> {
             }
         });
 
-        name.setText(user.getUsername() + ", " + user.getDateOfBirth());
         Glide.with(getContext()).asBitmap().load(getBitmapFromEncodedString(user.getProfileImage())).into(image);
 
         return convertView;

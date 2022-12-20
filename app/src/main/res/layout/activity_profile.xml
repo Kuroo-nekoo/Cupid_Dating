@@ -9,9 +9,7 @@
     <!-- top navigation -->
     <include layout="@layout/layout_top_navigation_view" />
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/profile_bg"
@@ -45,7 +43,6 @@
                     android:layout_height="161dp"
                     android:layout_centerInParent="true"
                     android:layout_marginTop="59dp"
-                    android:src="@drawable/user1"
                     app:civ_border_color="@color/transparentPink"
                     app:civ_border_width="2dp" />
             </com.final_mad.datingapp.datingapp.Utils.PulsatorLayout>
@@ -57,22 +54,16 @@
                 android:layout_centerHorizontal="true"
                 android:text="Santosh Kumar"
                 android:textColor="@android:color/black"
-                android:textSize="20sp" />
+                android:textSize="25sp"
+                android:textStyle="bold"/>
 
-            <com.final_mad.datingapp.datingapp.customfonts.TextViewRegular
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:textSize="14dp"
-                android:gravity="center"
-                android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. "/>
 
 
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="40dp"
                 android:orientation="horizontal">
 
                 <ImageButton
