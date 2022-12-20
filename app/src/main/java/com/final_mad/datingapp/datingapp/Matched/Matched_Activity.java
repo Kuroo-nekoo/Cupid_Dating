@@ -41,8 +41,6 @@ public class Matched_Activity extends BaseActivity implements UserListener {
     List<User> copyList = new ArrayList<>();
     private Context mContext = Matched_Activity.this;
     private String userId, userSex, lookforSex;
-    private double latitude = 37.349642;
-    private double longtitude = -121.938987;
     private EditText search;
     private List<Users> usersList = new ArrayList<>();
     private RecyclerView recyclerView, mRecyclerView;
@@ -199,7 +197,7 @@ public class Matched_Activity extends BaseActivity implements UserListener {
     private void getUsers() {
         loading(true);
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        firestore.collection(Constants.KEY_COLLECTION_USERS)
+        firestore.collection(Constants.KEY_COLLECTION_USERS).document(preferenceManager.getString(Constants.KEY_USER_ID)).collection("matchedUser")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

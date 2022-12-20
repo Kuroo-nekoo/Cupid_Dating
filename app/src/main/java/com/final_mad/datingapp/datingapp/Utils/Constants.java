@@ -31,6 +31,7 @@ public class Constants {
     public static final String REMOTE_MSG_REGISTRATION_IDS = "registration_ids";
     public static final String KEY_USER_LONGITUDE = "longitude";
     public static final String KEY_USER_LATITUDE = "latitude";
+    public static final String KEY_USER_DATA_OF_BIRTH = "dateOfBirth";
 
     public static HashMap<String, String> remoteMsgHeaders = null;
 

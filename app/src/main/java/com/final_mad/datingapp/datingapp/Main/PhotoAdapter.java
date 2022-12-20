@@ -3,6 +3,10 @@ package com.final_mad.datingapp.datingapp.Main;
 import android.content.Context;
 import android.content.Intent;
 import androidx.annotation.NonNull;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,22 +17,39 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.final_mad.datingapp.datingapp.R;
+import com.final_mad.datingapp.datingapp.Utils.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 
-public class PhotoAdapter extends ArrayAdapter<Cards> {
+public class PhotoAdapter extends ArrayAdapter<User> {
     Context mContext;
+    private ArrayList<User> userArrayList;
 
-
-    public PhotoAdapter(@NonNull Context context, int resource, @NonNull List<Cards> objects) {
+    public PhotoAdapter(@NonNull Context context, int resource, @NonNull ArrayList<User> objects) {
         super(context, resource, objects);
         this.mContext = context;
+        userArrayList = objects;
+    }
+
+    private Bitmap getBitmapFromEncodedString(String encodedImage) {
+        if (encodedImage != null) {
+            byte[] bytes = Base64.decode(encodedImage, Base64.DEFAULT);
+            return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public int getCount() {
+        return userArrayList.size();
     }
 
     public View getView(final int position, View convertView, ViewGroup parent) {
-        final Cards card_item = getItem(position);
+        final User user = getItem(position);
 
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item, parent, false);
@@ -38,33 +59,22 @@ public class PhotoAdapter extends ArrayAdapter<Cards> {
         ImageView image = convertView.findViewById(R.id.image);
         ImageButton btnInfo = convertView.findViewById(R.id.checkInfoBeforeMatched);
 
-        name.setText(card_item.getName() + ", " + card_item.getAge());
+        name.setText(user.getUsername() + ", " + user.getDateOfBirth());
         btnInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, ProfileCheckinMain.class);
-                intent.putExtra("name", card_item.getName() + ", " + card_item.getAge());
-                intent.putExtra("photo", card_item.getProfileImageUrl());
-                intent.putExtra("bio", card_item.getBio());
-                intent.putExtra("interest", card_item.getInterest());
-                intent.putExtra("distance", card_item.getDistance());
+                intent.putExtra("name", user.getUsername() + ", " + user.getDateOfBirth());
+                intent.putExtra("photo", user.getProfileImage());
+                intent.putExtra("bio", user.getUsername());
+                intent.putExtra("interest", user.getUsername());
+                intent.putExtra("distance", user.getDistance());
                 mContext.startActivity(intent);
             }
         });
 
-        name.setText(card_item.getName() + ", " + card_item.getAge());
-
-        switch (card_item.getProfileImageUrl()) {
-            case "defaultFemale":
-                Glide.with(getContext()).load(R.drawable.default_woman).into(image);
-                break;
-            case "defaultMale":
-                Glide.with(getContext()).load(R.drawable.default_man).into(image);
-                break;
-            default:
-                Glide.with(getContext()).load(card_item.getProfileImageUrl()).into(image);
-                break;
-        }
+        name.setText(user.getUsername() + ", " + user.getDateOfBirth());
+        Glide.with(getContext()).asBitmap().load(getBitmapFromEncodedString(user.getProfileImage())).into(image);
 
         return convertView;
     }

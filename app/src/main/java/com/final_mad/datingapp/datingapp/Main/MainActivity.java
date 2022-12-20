@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,12 +20,22 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.final_mad.datingapp.datingapp.Matched.ChatActivity;
+import com.final_mad.datingapp.datingapp.Matched.MatchUserAdapter;
+import com.final_mad.datingapp.datingapp.Matched.Matched_Activity;
+import com.final_mad.datingapp.datingapp.Nearby.NearbyAdapter;
 import com.final_mad.datingapp.datingapp.Utils.Constants;
 import com.final_mad.datingapp.datingapp.Utils.PreferenceManager;
+import com.final_mad.datingapp.datingapp.Utils.User;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
@@ -33,6 +45,7 @@ import com.final_mad.datingapp.datingapp.Utils.PulsatorLayout;
 import com.final_mad.datingapp.datingapp.Utils.TopNavigationViewHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -51,53 +64,44 @@ public class MainActivity extends Activity {
     private PhotoAdapter arrayAdapter;
     private FirebaseFirestore firestore;
     private PreferenceManager preferenceManager;
+    private ArrayList<User> userList;
+    private PhotoAdapter2 photoAdapter;
+    private SwipeFlingAdapterView flingContainer;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        try {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main);
+            userList = new ArrayList<>();
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PackageManager.PERMISSION_GRANTED);
+            firestore = FirebaseFirestore.getInstance();
+            preferenceManager = new PreferenceManager(getApplicationContext());
+            cardFrame = findViewById(R.id.card_frame);
+            moreFrame = findViewById(R.id.more_frame);
+            PulsatorLayout mPulsator = findViewById(R.id.pulsator);
+            mPulsator.start();
+            mNotificationHelper = new NotificationHelper(this);
+            getToken();
 
-        firestore = FirebaseFirestore.getInstance();
-        preferenceManager = new PreferenceManager(getApplicationContext());
-        getToken();
-        cardFrame = findViewById(R.id.card_frame);
-        moreFrame = findViewById(R.id.more_frame);
-        // start pulsator
-        PulsatorLayout mPulsator = findViewById(R.id.pulsator);
-        mPulsator.start();
-        mNotificationHelper = new NotificationHelper(this);
-        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PackageManager.PERMISSION_GRANTED);
-
-
-
-        setupTopNavigationView();
+            // start pulsator
 
 
-        rowItems = new ArrayList<Cards>();
-        Cards cards = new Cards("1", "Swati Tripathy", 21, "https://im.idiva.com/author/2018/Jul/shivani_chhabra-_author_s_profile.jpg", "Simple and beautiful Girl", "Acting", 200);
-        rowItems.add(cards);
-        cards = new Cards("2", "Ananaya Pandy", 20, "https://i0.wp.com/profilepicturesdp.com/wp-content/uploads/2018/06/beautiful-indian-girl-image-for-profile-picture-8.jpg", "cool Minded Girl", "Dancing", 800);
-        rowItems.add(cards);
-        cards = new Cards("3", "Anjali Kasyap", 22, "https://pbs.twimg.com/profile_images/967542394898952192/_M_eHegh_400x400.jpg", "Simple and beautiful Girl", "Singing", 400);
-        rowItems.add(cards);
-        cards = new Cards("4", "Preety Deshmukh", 19, "http://profilepicturesdp.com/wp-content/uploads/2018/07/fb-real-girls-dp-3.jpg", "dashing girl", "swiming", 1308);
-        rowItems.add(cards);
-        cards = new Cards("5", "Srutimayee Sen", 20, "https://dp.profilepics.in/profile_pictures/selfie-girls-profile-pics-dp/selfie-pics-dp-for-whatsapp-facebook-profile-25.jpg", "chulbuli nautankibaj ", "Drawing", 1200);
-        rowItems.add(cards);
-        cards = new Cards("6", "Dikshya Agarawal", 21, "https://pbs.twimg.com/profile_images/485824669732200448/Wy__CJwU.jpeg", "Simple and beautiful Girl", "Sleeping", 700);
-        rowItems.add(cards);
-        cards = new Cards("7", "Sudeshna Roy", 19, "https://talenthouse-res.cloudinary.com/image/upload/c_fill,f_auto,h_640,w_640/v1411380245/user-415406/submissions/hhb27pgtlp9akxjqlr5w.jpg", "Papa's Pari", "Art", 5000);
-        rowItems.add(cards);
 
-        arrayAdapter = new PhotoAdapter(this, R.layout.item, rowItems);
 
-        checkRowItem();
-        updateSwipeCard();
+
+            setupTopNavigationView();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void checkRowItem() {
-        if (rowItems.isEmpty()) {
+        if (userList.isEmpty()) {
             moreFrame.setVisibility(View.VISIBLE);
             cardFrame.setVisibility(View.GONE);
         }
@@ -140,26 +144,28 @@ public class MainActivity extends Activity {
     }
 
     private void updateSwipeCard() {
-        final SwipeFlingAdapterView flingContainer = findViewById(R.id.frame);
-        flingContainer.setAdapter(arrayAdapter);
         flingContainer.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
             @Override
             public void removeFirstObjectInAdapter() {
                 // this is the simplest way to delete an object from the Adapter (/AdapterView)
                 Log.d("LIST", "removed object!");
-                rowItems.remove(0);
+                userList.remove(0);
                 arrayAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onLeftCardExit(Object dataObject) {
-                Cards obj = (Cards) dataObject;
+                User obj = (User) dataObject;
+                HashMap<String, String> test = new HashMap<>();
+                test.put("Test", "test");
                 checkRowItem();
+                DocumentReference documentReference = firestore.collection(Constants.KEY_COLLECTION_USERS).document(preferenceManager.getString(Constants.KEY_USER_ID));
+                documentReference.collection("matchedUser").add(obj);
             }
 
             @Override
             public void onRightCardExit(Object dataObject) {
-                Cards obj = (Cards) dataObject;
+                User obj = (User) dataObject;
 
                 //check matches
                 checkRowItem();
@@ -199,33 +205,33 @@ public class MainActivity extends Activity {
 
 
     public void DislikeBtn(View v) {
-        if (rowItems.size() != 0) {
-            Cards card_item = rowItems.get(0);
+        if (userList.size() != 0) {
+            User user = userList.get(0);
 
-            String userId = card_item.getUserId();
+            String userId = user.getUser_id();
 
-            rowItems.remove(0);
+            userList.remove(0);
             arrayAdapter.notifyDataSetChanged();
 
             Intent btnClick = new Intent(mContext, BtnDislikeActivity.class);
-            btnClick.putExtra("url", card_item.getProfileImageUrl());
+            btnClick.putExtra("url", user.getProfileImage());
             startActivity(btnClick);
         }
     }
 
     public void LikeBtn(View v) {
-        if (rowItems.size() != 0) {
-            Cards card_item = rowItems.get(0);
+        if (userList.size() != 0) {
+            User user = userList.get(0);
 
-            String userId = card_item.getUserId();
+            String userId = user.getUser_id();
 
             //check matches
 
-            rowItems.remove(0);
+            userList.remove(0);
             arrayAdapter.notifyDataSetChanged();
 
             Intent btnClick = new Intent(mContext, BtnLikeActivity.class);
-            btnClick.putExtra("url", card_item.getProfileImageUrl());
+            btnClick.putExtra("url", user.getProfileImage());
             startActivity(btnClick);
         }
     }
@@ -264,7 +270,42 @@ public class MainActivity extends Activity {
                     @Override
                     public void onSuccess(Void unused) {
                         showToast("Token updated successfully");
+                        firestore.collection(Constants.KEY_COLLECTION_USERS)
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        String currentUserId = preferenceManager.getString(Constants.KEY_USER_ID);
+                                        if (task.isSuccessful() && task.getResult() != null) {
+                                            for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
+                                                if (currentUserId.equals(queryDocumentSnapshot.getId())) {
+                                                    continue;
+                                                }
+                                                User user = new User();
+                                                user.setUsername(queryDocumentSnapshot.getString(Constants.KEY_USER_NAME));
+                                                user.setEmail(queryDocumentSnapshot.getString(Constants.KEY_USER_EMAIL));
+                                                user.setProfileImage(queryDocumentSnapshot.getString(Constants.KEY_USER_PROFILE_IMAGE));
+                                                user.setToken(queryDocumentSnapshot.getString(Constants.KEY_FCM_TOKEN));
+                                                double latitude = queryDocumentSnapshot.getDouble(Constants.KEY_USER_LATITUDE);
+                                                double longitude = queryDocumentSnapshot.getDouble(Constants.KEY_USER_LONGITUDE);
+                                                user.setLatitude(latitude);
+                                                user.setLongitude(longitude);
+                                                user.setAvailable(queryDocumentSnapshot.getLong(Constants.KEY_AVAILABILITY) == 1);
+                                                user.setDateOfBirth(queryDocumentSnapshot.getString(Constants.KEY_USER_DATA_OF_BIRTH));
+                                                userList.add(user);
+                                            }
+                                            arrayAdapter = new PhotoAdapter(MainActivity.this, R.layout.item, userList);
+                                            flingContainer = findViewById(R.id.frame);
+                                            flingContainer.setAdapter(arrayAdapter);
+                                            arrayAdapter.notifyDataSetChanged();
+                                            int i = arrayAdapter.getCount();
+                                            checkRowItem();
+                                            updateSwipeCard();
+                                        }
+                                    }
+                                });
                     }
+
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -273,5 +314,6 @@ public class MainActivity extends Activity {
                     }
                 });
     }
+
 
 }
