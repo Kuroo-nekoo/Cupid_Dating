@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         tools:listitem="@layout/item_container_neary_user"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        android:layout_margin="20dp"
         />
 
 </LinearLayout>

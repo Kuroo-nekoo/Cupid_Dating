@@ -37,7 +37,7 @@ public class BaseActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         try {
-            documentReference.update(Constants.KEY_AVAILABILITY, 0);
+            documentReference.update(Constants.KEY_AVAILABILITY, false);
             GPS gps = new GPS(getApplicationContext());
             Location location = gps.getLocation();
             documentReference.update(Constants.KEY_USER_LATITUDE, location.getLatitude());
@@ -50,7 +50,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        documentReference.update(Constants.KEY_AVAILABILITY, 1);
+        documentReference.update(Constants.KEY_AVAILABILITY, true);
         GPS gps = new GPS(getApplicationContext());
         Location location = gps.getLocation();
         documentReference.update(Constants.KEY_USER_LATITUDE, location.getLatitude());

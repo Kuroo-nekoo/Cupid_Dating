@@ -75,12 +75,12 @@ public class NearbyActivity extends AppCompatActivity {
                                 double longitude = queryDocumentSnapshot.getDouble(Constants.KEY_USER_LONGITUDE);
                                 user.setLatitude(latitude);
                                 user.setLongitude(longitude);
-                                user.setAvailable(queryDocumentSnapshot.getLong(Constants.KEY_AVAILABILITY) == 1);
+                                user.setAvailable(queryDocumentSnapshot.getBoolean(Constants.KEY_AVAILABILITY));
+                                Toast.makeText(getApplicationContext(), "distance" +  Double.toString(gps.calculateDistance(currLatitude, currLongitude,latitude, longitude)), Toast.LENGTH_LONG).show();
 
-                                if(gps.calculateDistance(currLatitude, currLongitude,latitude, longitude) < 3000) {
+                                if(gps.calculateDistance(currLatitude, currLongitude,latitude, longitude) < 3000 && gps.calculateDistance(currLatitude, currLongitude,latitude, longitude) > 1000) {
                                     try {
-                                        Toast.makeText(getApplicationContext(), "distance" +  Double.toString(gps.calculateDistance(currLatitude, currLongitude,latitude, longitude)), Toast.LENGTH_LONG).show();
-                                        user.setDistance(gps.calculateDistance(currLatitude, currLongitude,latitude, longitude));
+                                        user.setDistance(gps.calculateDistance(currLatitude, currLongitude,latitude, longitude) / 1000);
                                         user.setUser_id(queryDocumentSnapshot.getId());
                                         userList.add(user);
                                     } catch (Exception e) {

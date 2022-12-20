@@ -20,11 +20,14 @@ import com.final_mad.datingapp.datingapp.Utils.Constants;
 import com.final_mad.datingapp.datingapp.Utils.GPS;
 import com.final_mad.datingapp.datingapp.Utils.PreferenceManager;
 import com.final_mad.datingapp.datingapp.Utils.User;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class RegisterEmailPassword extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
@@ -46,16 +49,20 @@ public class RegisterEmailPassword extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register_email_password);
-        mContext = RegisterEmailPassword.this;
-        preferenceManager = new PreferenceManager(getApplicationContext());
-        Log.d(TAG, "onCreate: started");
+        try {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_register_email_password);
+            mContext = RegisterEmailPassword.this;
+            preferenceManager = new PreferenceManager(getApplicationContext());
+            Log.d(TAG, "onCreate: started");
+            gps = new GPS(getApplicationContext());
+            initWidgets();
+            init();
 
-        gps = new GPS(getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        initWidgets();
-        init();
     }
 
     private void init() {
@@ -63,6 +70,7 @@ public class RegisterEmailPassword extends AppCompatActivity {
         user = (User) intent.getSerializableExtra("classUser");
         firestore = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
+        tvError.setText("");
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,32 +121,33 @@ public class RegisterEmailPassword extends AppCompatActivity {
         });
 
 
-//                    Log.d("Location==>", longtitude + "   " + latitude);
 //
-//
-//                    Intent intent = new Intent(RegisterBasicInfo.this, RegisterGender.class);
-//                    User user = new User("", "", "", "", email, "username", false, false, false, false, "", "", "", latitude, longtitude);
-//                    intent.putExtra("password", password);
-//                    intent.putExtra("classUser", user);
-//                    startActivity(intent);
 
     }
 
     private boolean checkInputs(String email, String password, String confirmPassword) {
         Log.d(TAG, "checkInputs: checking inputs for null values.");
-        if (email.equals("") || confirmPassword.equals("") || password.equals("")) {
-            Toast.makeText(mContext, "All fields must be filed out.", Toast.LENGTH_SHORT).show();
+        if (email.equals("")) {
+            tvError.setText("Email must be provide");
             return false;
         }
 
-        // Below code checks if the email id is valid or not.
+        if (password.equals("")) {
+            tvError.setText("Password must be provide");
+            return false;
+        }
+
+        if (confirmPassword.equals("")) {
+            tvError.setText("Confirm password must be provide");
+        }
+
         if (!email.matches(emailPattern)) {
-            Toast.makeText(getApplicationContext(), "Invalid email address, enter valid email id and click on Continue", Toast.LENGTH_SHORT).show();
+            tvError.setText("Invalid email address, please enter valid email");
             return false;
         }
 
         if (!password.toString().equals(confirmPassword.toString())) {
-            Toast.makeText(getApplicationContext(), "Password and confirm password mus be the same", Toast.LENGTH_SHORT).show();
+            tvError.setText("Password and confirm password must be the same");
             return false;
         }
 

@@ -52,20 +52,22 @@ public class RegisterImage extends AppCompatActivity {
         btContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(RegisterImage.this, RegisterEmailPassword.class);
-                user.setProfileImage(encodedImage);
-                intent.putExtra("classUser", user);
-                startActivity(intent);
+                try {
+                    Intent intent = new Intent(RegisterImage.this, RegisterEmailPassword.class);
+                    user.setProfileImage(encodedImage);
+                    intent.putExtra("classUser", user);
+                    startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
         });
     }
 
     private String encodeImage(Bitmap bitmap) {
-        int previewWidth = 150;
-        int previewHeight = bitmap.getHeight() * previewWidth / bitmap.getWidth();
-        Bitmap previewBitmap = Bitmap.createScaledBitmap(bitmap, previewWidth, previewHeight, false);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        previewBitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
         byte[] bytes = byteArrayOutputStream.toByteArray();
         return Base64.encodeToString(bytes, Base64.DEFAULT);
     }

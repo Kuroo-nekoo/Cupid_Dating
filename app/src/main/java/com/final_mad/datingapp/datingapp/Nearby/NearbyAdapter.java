@@ -50,8 +50,11 @@ public class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapter.NearbyView
             if (user.getProfileImage() != null) {
                 binding.imAvatar.setImageBitmap(getBitmapFromEncodedString(user.getProfileImage()));
             }
-            binding.tvDistance.setText(Double.toString(user.getDistance()) + " km");
+            binding.tvDistance.setText(String.format(java.util.Locale.US,"%.1f", user.getDistance()) + " km");
             binding.tvName.setText(user.getUsername());
+            if (!user.isAvailable()) {
+                binding.ivOnline.setVisibility(View.GONE);
+            }
         }
     }
 

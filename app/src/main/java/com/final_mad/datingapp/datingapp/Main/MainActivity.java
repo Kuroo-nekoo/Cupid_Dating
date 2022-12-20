@@ -84,6 +84,7 @@ public class MainActivity extends Activity {
             PulsatorLayout mPulsator = findViewById(R.id.pulsator);
             mPulsator.start();
             mNotificationHelper = new NotificationHelper(this);
+            setupTopNavigationView();
             getToken();
 
             // start pulsator
@@ -92,7 +93,7 @@ public class MainActivity extends Activity {
 
 
 
-            setupTopNavigationView();
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -159,8 +160,7 @@ public class MainActivity extends Activity {
                 HashMap<String, String> test = new HashMap<>();
                 test.put("Test", "test");
                 checkRowItem();
-                DocumentReference documentReference = firestore.collection(Constants.KEY_COLLECTION_USERS).document(preferenceManager.getString(Constants.KEY_USER_ID));
-                documentReference.collection("matchedUser").add(obj);
+
             }
 
             @Override
@@ -169,7 +169,17 @@ public class MainActivity extends Activity {
 
                 //check matches
                 checkRowItem();
-
+                DocumentReference documentReference = firestore.collection(Constants.KEY_COLLECTION_USERS).document(preferenceManager.getString(Constants.KEY_USER_ID));
+                documentReference.collection("matchedUser").whereEqualTo("email", obj.getEmail())
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful() && task.getResult() != null && task.getResult().getDocumentChanges().size() == 0) {
+                                    documentReference.collection("matchedUser").add(obj);
+                                }
+                            }
+                        });
             }
 
             @Override
@@ -213,9 +223,7 @@ public class MainActivity extends Activity {
             userList.remove(0);
             arrayAdapter.notifyDataSetChanged();
 
-            Intent btnClick = new Intent(mContext, BtnDislikeActivity.class);
-            btnClick.putExtra("url", user.getProfileImage());
-            startActivity(btnClick);
+
         }
     }
 
@@ -290,7 +298,7 @@ public class MainActivity extends Activity {
                                                 double longitude = queryDocumentSnapshot.getDouble(Constants.KEY_USER_LONGITUDE);
                                                 user.setLatitude(latitude);
                                                 user.setLongitude(longitude);
-                                                user.setAvailable(queryDocumentSnapshot.getLong(Constants.KEY_AVAILABILITY) == 1);
+                                                user.setAvailable(queryDocumentSnapshot.getBoolean(Constants.KEY_AVAILABILITY));
                                                 user.setDateOfBirth(queryDocumentSnapshot.getString(Constants.KEY_USER_DATA_OF_BIRTH));
                                                 userList.add(user);
                                             }
@@ -298,7 +306,7 @@ public class MainActivity extends Activity {
                                             flingContainer = findViewById(R.id.frame);
                                             flingContainer.setAdapter(arrayAdapter);
                                             arrayAdapter.notifyDataSetChanged();
-                                            int i = arrayAdapter.getCount();
+
                                             checkRowItem();
                                             updateSwipeCard();
                                         }

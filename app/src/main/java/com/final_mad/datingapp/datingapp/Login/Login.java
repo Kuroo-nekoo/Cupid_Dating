@@ -146,16 +146,6 @@ public class Login extends AppCompatActivity {
 
     }
 
-    private void initVar() {
-        mAuth = FirebaseAuth.getInstance();
-        user_email = findViewById(R.id.input_email);
-        user_password = findViewById(R.id.input_password);
-        btn_sign_in = findViewById(R.id.btn_login);
-//        sign_up = findViewById(R.id.sign_up);
-//        forgot_pass = findViewById(R.id.forgot_pass);
-//        progressBar_login = findViewById(R.id.progressBar_login);
-    }
-
     private void loading (Boolean isLoading) {
         if(isLoading) {
             btn_sign_in.setVisibility(View.INVISIBLE);

@@ -63,6 +63,9 @@ public class GPS implements LocationListener {
         dist = Math.acos(dist);
         dist = rad2deg(dist);
         dist = dist * 60 * 1.1515;
+        if (lat1 == lat2 && lon1 == lon2) {
+            return 0.0;
+        }
 
 //        int dis = (int) Math.floor(dist);
 //        if (dis < 1) {
