@@ -20,17 +20,22 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="12dp"
-                android:padding="5dp"
+                android:layout_margin="@dimen/_10dp"
                 android:src="@drawable/ic_back"
                 android:id="@+id/ivBack"
+                android:layout_gravity="center"
                 />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/tvName"/>
+                android:id="@+id/tvName"
+                android:gravity="center_vertical"
+                android:textAlignment="gravity"
+                android:text="test"
+                android:paddingStart="@dimen/_10dp"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:textColor="@color/black"/>
         </LinearLayout>
         <TextView
             android:layout_width="match_parent"
@@ -48,7 +53,10 @@
             android:layout_height="0dp"
             android:layout_weight="20"
             android:id="@+id/rcvChat"
-            app:stackFromEnd="true">
+            app:stackFromEnd="true"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            >
         </androidx.recyclerview.widget.RecyclerView>
 
         <FrameLayout

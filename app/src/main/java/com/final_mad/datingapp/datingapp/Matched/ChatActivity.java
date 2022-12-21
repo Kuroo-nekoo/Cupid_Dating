@@ -149,7 +149,8 @@ public class ChatActivity extends BaseActivity {
         chatAdapter = new ChatAdapter(
                 chatMessageList,
                 getBitmapFromEncodedString(receiveUser.getProfileImage()),
-                preferenceManager.getString(Constants.KEY_USER_ID)
+                preferenceManager.getString(Constants.KEY_USER_ID),
+                getBitmapFromEncodedString(preferenceManager.getString(Constants.KEY_USER_PROFILE_IMAGE))
         );
         binding.rcvChat.setAdapter(chatAdapter);
         firestore = FirebaseFirestore.getInstance();

@@ -2,6 +2,8 @@ package com.final_mad.datingapp.datingapp.Matched;
 
 import android.content.ClipData;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.final_mad.datingapp.datingapp.Utils.PreferenceManager;
 import com.final_mad.datingapp.datingapp.databinding.ItemContainerReceiveMessageBinding;
 import com.final_mad.datingapp.datingapp.databinding.ItemContainerSentMessageBinding;
 import com.final_mad.datingapp.datingapp.models.ChatMessage;
@@ -19,18 +22,21 @@ public class ChatAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private Bitmap receiverProfileImage;
     private final List<ChatMessage> chatMessageList;
     private final String senderId;
+    private Bitmap senderProfileImage;
 
     public static final int VIEW_TYPE_SENT = 1;
     public static final int VIEW_TYPE_RECEIVED = 2;
+
 
     public void setReceiverProfileImage(Bitmap bitmap) {
         receiverProfileImage = bitmap;
     }
 
-    public ChatAdapter( List<ChatMessage> chatMessageList,Bitmap receiverProfileImage, String senderId) {
+    public ChatAdapter( List<ChatMessage> chatMessageList,Bitmap receiverProfileImage, String senderId, Bitmap senderProfileImage) {
         this.receiverProfileImage = receiverProfileImage;
         this.chatMessageList = chatMessageList;
         this.senderId = senderId;
+        this.senderProfileImage = senderProfileImage;
     }
 
     @NonNull
@@ -46,7 +52,7 @@ public class ChatAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (getItemViewType(position) == VIEW_TYPE_SENT) {
-            ((SentMessageViewHolder) holder).setData(chatMessageList.get(position));
+            ((SentMessageViewHolder) holder).setData(chatMessageList.get(position), senderProfileImage);
         } else {
             ((ReceivedMessageViewHolder) holder).setData(chatMessageList.get(position), receiverProfileImage);
         }
@@ -75,9 +81,12 @@ public class ChatAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
             binding = itemContainerSentMessageBinding;
         }
 
-        void setData(ChatMessage chatMessage) {
+        void setData(ChatMessage chatMessage, Bitmap senderProfileImage) {
             binding.tvMessage.setText(chatMessage.getMessage());
             binding.tvDateTime.setText(chatMessage.getDateTime());
+            if (senderProfileImage != null) {
+                binding.ivProfile.setImageBitmap(senderProfileImage);
+            }
         }
     }
 
@@ -95,6 +104,15 @@ public class ChatAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
             if (receiverProfileImage != null) {
                 binding.ivProfile.setImageBitmap(receiverProfileImage);
             }
+        }
+    }
+
+    private Bitmap getBitmapFromEncodedString(String encodedImage) {
+        if (encodedImage != null) {
+            byte[] bytes = Base64.decode(encodedImage, Base64.DEFAULT);
+            return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        } else {
+            return null;
         }
     }
 }
