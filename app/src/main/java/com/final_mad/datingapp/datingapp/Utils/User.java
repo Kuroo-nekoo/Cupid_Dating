@@ -23,6 +23,24 @@ public class User implements Serializable {
     private String profileImage;
     private double distance;
     private boolean isAvailable;
+    private boolean notShowAge;
+    private boolean notShowDistance;
+
+    public boolean isNotShowAge() {
+        return notShowAge;
+    }
+
+    public void setNotShowAge(boolean notShowAge) {
+        this.notShowAge = notShowAge;
+    }
+
+    public boolean isNotShowDistance() {
+        return notShowDistance;
+    }
+
+    public void setNotShowDistance(boolean notShowDistance) {
+        this.notShowDistance = notShowDistance;
+    }
 
     public boolean isAvailable() {
         return isAvailable;

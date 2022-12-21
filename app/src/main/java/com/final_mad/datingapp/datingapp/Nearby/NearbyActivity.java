@@ -56,7 +56,6 @@ public class NearbyActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         init();
         setupTopNavigationView();
-
     }
 
     private void getAllUser() {
@@ -81,6 +80,8 @@ public class NearbyActivity extends AppCompatActivity {
                                 user.setLatitude(latitude);
                                 user.setLongitude(longitude);
                                 user.setAvailable(queryDocumentSnapshot.getBoolean(Constants.KEY_AVAILABILITY));
+                                user.setNotShowAge(queryDocumentSnapshot.getBoolean("notShowAge"));
+                                user.setNotShowDistance(queryDocumentSnapshot.getBoolean("notShowDistance"));
                                 Toast.makeText(getApplicationContext(), "distance" +  Double.toString(gps.calculateDistance(currLatitude, currLongitude,latitude, longitude)), Toast.LENGTH_LONG).show();
 
                                 if(gps.calculateDistance(currLatitude, currLongitude,latitude, longitude) < 10 && gps.calculateDistance(currLatitude, currLongitude,latitude, longitude) > 1) {

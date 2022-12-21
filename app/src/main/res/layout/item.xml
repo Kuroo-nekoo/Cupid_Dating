@@ -24,7 +24,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="top"
-            android:layout_marginBottom="10dp"
             android:background="@color/white"
             android:orientation="vertical">
 
@@ -74,6 +73,7 @@
                     android:layout_height="wrap_content"
                     android:background="#B3404A"
                     android:padding="15dp"
+                    android:layout_gravity="bottom"
                     >
 
                     <TextView
@@ -86,14 +86,16 @@
                         android:textColor="@color/white"
                         android:textSize="25sp"
                         android:textStyle="bold"
+                        android:layout_gravity="center"
                         />
 
                     <ImageButton
                         android:id="@+id/checkInfoBeforeMatched"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center_vertical"
                         android:layout_marginRight="20dp"
-                        android:background="@color/white"
+                        android:background="#B3404A"
                         android:onClick="checkInfo"
                         android:src="@drawable/ic_info" />
 

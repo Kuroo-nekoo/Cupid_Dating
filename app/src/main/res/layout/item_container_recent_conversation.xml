@@ -8,8 +8,8 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/mui_image"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_margin="@dimen/_5dp"
         android:src="@drawable/monkey"
         app:civ_border_color="@color/devider"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:text="santosh Dash"
             android:textColor="@color/black"
-            android:textSize="18dp" />
+            android:textSize="20dp" />
 
         <TextView
             android:id="@+id/tvRecentMessage"
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:text="Student"
             android:textColor="@color/gray_btn_bg_pressed_color"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
     </LinearLayout>
 </LinearLayout>

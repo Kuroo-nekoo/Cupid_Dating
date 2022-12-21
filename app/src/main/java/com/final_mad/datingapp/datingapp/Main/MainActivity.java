@@ -307,6 +307,8 @@ public class MainActivity extends Activity {
                                                 user.setAvailable(queryDocumentSnapshot.getBoolean(Constants.KEY_AVAILABILITY));
                                                 user.setDateOfBirth(queryDocumentSnapshot.getString(Constants.KEY_USER_DATA_OF_BIRTH));
                                                 user.setUser_id(queryDocumentSnapshot.getId());
+                                                user.setNotShowDistance(queryDocumentSnapshot.getBoolean("notShowDistance"));
+                                                user.setNotShowAge(queryDocumentSnapshot.getBoolean("notShowAge"));
                                                 userList.add(user);
                                             }
                                             arrayAdapter = new PhotoAdapter(MainActivity.this, R.layout.item, userList);

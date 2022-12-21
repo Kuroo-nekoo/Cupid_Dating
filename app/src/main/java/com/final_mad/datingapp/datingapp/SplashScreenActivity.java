@@ -34,7 +34,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         preferenceManager = new PreferenceManager(getApplicationContext());
-//        preferenceManager.clear();
+        preferenceManager.clear();
         super.onCreate(savedInstanceState);
         if (Build.VERSION.SDK_INT >= 19) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);

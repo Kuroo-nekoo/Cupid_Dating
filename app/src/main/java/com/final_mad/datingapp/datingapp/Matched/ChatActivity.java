@@ -102,6 +102,7 @@ public class ChatActivity extends BaseActivity {
     private void loadReceiverDetails() {
         receiveUser = (User) getIntent().getSerializableExtra(Constants.KEY_USER);
         binding.tvName.setText(receiveUser.getUsername());
+        binding.ivAvatar.setImageBitmap(getBitmapFromEncodedString(receiveUser.getProfileImage()));
     }
 
     private void showToast(String message) {
@@ -171,6 +172,7 @@ public class ChatActivity extends BaseActivity {
                 conversation.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
                 conversation.put(Constants.KEY_SENDER_NAME, preferenceManager.getString(Constants.KEY_USER_NAME));
                 conversation.put(Constants.KEY_SENDER_IMAGE, preferenceManager.getString(Constants.KEY_USER_PROFILE_IMAGE));
+                String test = preferenceManager.getString(Constants.KEY_USER_PROFILE_IMAGE);
                 conversation.put(Constants.KEY_RECEIVE_ID, receiveUser.getUser_id());
                 conversation.put(Constants.KEY_RECEIVER_NAME, receiveUser.getUsername());
                 conversation.put(Constants.KEY_RECEIVER_IMAGE, receiveUser.getProfileImage());
@@ -204,8 +206,6 @@ public class ChatActivity extends BaseActivity {
     }
 
     private void listenMessages() {
-        String test = preferenceManager.getString(Constants.KEY_USER_ID);
-        String test2 = receiveUser.getUser_id();
         firestore.collection(Constants.KEY_COLLECTION_CHAT)
                 .whereEqualTo(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
                 .whereEqualTo(Constants.KEY_RECEIVE_ID, receiveUser.getUser_id())

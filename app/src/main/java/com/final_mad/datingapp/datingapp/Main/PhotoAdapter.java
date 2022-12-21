@@ -53,36 +53,44 @@ public class PhotoAdapter extends ArrayAdapter<User> {
     }
 
     public View getView(final int position, View convertView, ViewGroup parent) {
-        final User user = getItem(position);
-        CalculateAge calculateAge = new CalculateAge(user.getDateOfBirth());
+        try {
+            final User user = getItem(position);
+            CalculateAge calculateAge = new CalculateAge(user.getDateOfBirth());
 
-        if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item, parent, false);
-        }
-
-        TextView name = convertView.findViewById(R.id.name);
-        ImageView image = convertView.findViewById(R.id.image);
-        ImageButton btnInfo = convertView.findViewById(R.id.checkInfoBeforeMatched);
-
-        name.setText(user.getUsername() + ", " + Integer.toString(calculateAge.getAge()));
-        btnInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, ProfileCheckinMain.class);
-                CalculateAge calculateAge = new CalculateAge(user.getDateOfBirth());
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    intent.putExtra("name", user.getUsername() + ", " + Integer.toString(calculateAge.getAge()));
-                }
-                intent.putExtra("photo", user.getProfileImage());
-                intent.putExtra("bio", user.getUsername());
-                intent.putExtra("interest", user.getUsername());
-                intent.putExtra("distance", user.getDistance());
-                mContext.startActivity(intent);
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item, parent, false);
             }
-        });
 
-        Glide.with(getContext()).asBitmap().load(getBitmapFromEncodedString(user.getProfileImage())).into(image);
+            TextView name = convertView.findViewById(R.id.name);
+            ImageView image = convertView.findViewById(R.id.image);
+            ImageButton btnInfo = convertView.findViewById(R.id.checkInfoBeforeMatched);
+            if (!user.isNotShowAge()) {
+                name.setText(user.getUsername() + ", " + Integer.toString(calculateAge.getAge()));
+            } else {
+                name.setText(user.getUsername());
+            }
+            btnInfo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, ProfileCheckinMain.class);
+                    CalculateAge calculateAge = new CalculateAge(user.getDateOfBirth());
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        intent.putExtra("name", user.getUsername() + ", " + Integer.toString(calculateAge.getAge()));
+                    }
+                    intent.putExtra("photo", user.getProfileImage());
+                    intent.putExtra("bio", user.getUsername());
+                    intent.putExtra("interest", user.getUsername());
+                    intent.putExtra("distance", user.getDistance());
+                    mContext.startActivity(intent);
+                }
+            });
 
-        return convertView;
+            Glide.with(getContext()).asBitmap().load(getBitmapFromEncodedString(user.getProfileImage())).into(image);
+
+            return convertView;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

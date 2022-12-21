@@ -9,14 +9,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
+
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -28,13 +34,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.final_mad.datingapp.datingapp.R;
+import com.final_mad.datingapp.datingapp.Utils.Constants;
+import com.final_mad.datingapp.datingapp.Utils.PreferenceManager;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class EditProfileActivity extends AppCompatActivity {
@@ -45,47 +61,115 @@ public class EditProfileActivity extends AppCompatActivity {
     Button man, woman;
     ImageButton back;
     TextView man_text, women_text;
-    ImageView imageView1, imageView2, imageView3, imageView4, imageView5, imageView6, imageView;
+    ImageView imageView1, imageView;
     Bitmap myBitmap;
     Uri picUri;
     String[] permissionsRequired = new String[]{Manifest.permission.CAMERA,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private Context mContext = EditProfileActivity.this;
-    private ImageView mProfileImage;
-    private String userId, profileImageUri;
-    private Uri resultUri;
-    private String userSex;
-    private EditText phoneNumber, aboutMe;
-    private CheckBox sportsCheckBox, travelCheckBox, musicCheckBox, fishingCheckBox;
-    private boolean isSportsClicked = false;
-    private boolean isTravelClicked = false;
-    private boolean isFishingClicked = false;
-    private boolean isMusicClicked = false;
-    private RadioGroup userSexSelection;
     private SharedPreferences permissionStatus;
     private boolean sentToSettings = false;
     private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
-    private String userChoosenTask;
+
+//    fields of in4
+    EditText username, birthday;
+    SwitchCompat notAge, notDistance;
+//    default true is male, false is female
+    Boolean gender = true;
+    Button btnUpdate;
+
+    DocumentReference documentReference;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
+//        get data from fire store
+        PreferenceManager preferenceManager = new PreferenceManager(getApplicationContext());
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        documentReference = firestore
+                .collection(Constants.KEY_COLLECTION_USERS)
+                .document(preferenceManager.getString(Constants.KEY_USER_ID));
+
         permissionStatus = getSharedPreferences("permissionStatus", MODE_PRIVATE);
         requestMultiplePermissions();
         imageView1 = findViewById(R.id.image_view_1);
-        imageView2 = findViewById(R.id.image_view_2);
-        imageView3 = findViewById(R.id.image_view_3);
-        imageView4 = findViewById(R.id.image_view_4);
-        imageView5 = findViewById(R.id.image_view_5);
-        imageView6 = findViewById(R.id.image_view_6);
+        username = findViewById(R.id.edt_username);
+        birthday = findViewById(R.id.edt_dob);
+        notAge = findViewById(R.id.notShowAge);
+        notDistance = findViewById(R.id.notShowDistance);
+        btnUpdate = findViewById(R.id.updateInfor);
+
         man = findViewById(R.id.man_button);
         woman = findViewById(R.id.woman_button);
         man_text = findViewById(R.id.man_text);
         women_text = findViewById(R.id.woman_text);
         back = findViewById(R.id.back);
+
+
+
+//        loadLikeData();
+
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*Log.e("not age?",notAge.isChecked()+"");
+                Log.e("not dis?",notDistance.isChecked()+"");
+                Log.e("is man?", gender+"");
+                Log.e("username", username.getText().toString()+"");
+                Log.e("dob", birthday.getText().toString()+"");*/
+                // update
+                if(username.getText().toString().trim().equals("")) {
+                    Toast.makeText(EditProfileActivity.this,
+                            "Username cannot be empty!", Toast.LENGTH_SHORT).show();
+                }
+                else if(birthday.getText().toString().trim().equals("")) {
+                    Toast.makeText(EditProfileActivity.this,
+                            "Date of birth cannot be empty!", Toast.LENGTH_SHORT).show();
+                }
+                else if(!isDateValid(birthday.getText().toString())) {
+                    Toast.makeText(EditProfileActivity.this,
+                            "Date of birth is not valid", Toast.LENGTH_SHORT).show();
+                } else {
+                    documentReference.update("username", username.getText().toString());
+                    documentReference.update("dateOfBirth", birthday.getText().toString());
+                    documentReference.update("sex", gender ? "male" : "female");
+                    documentReference.update("notShowAge", notAge.isChecked());
+                    documentReference.update("notShowDistance", notDistance.isChecked());
+
+                    Toast.makeText(EditProfileActivity.this,
+                            "Update your information successfully", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                username.setText(documentSnapshot.getString("username"));
+                birthday.setText(documentSnapshot.getString("dateOfBirth"));
+                if(documentSnapshot.getString("sex").equals("male")) {
+                    man_text.setTextColor(R.color.colorAccent);
+                    man.setBackgroundResource(R.drawable.ic_check_select);
+                    women_text.setTextColor(R.color.black);
+                    woman.setBackgroundResource(R.drawable.ic_check_unselect);
+                } else {
+                    women_text.setTextColor(R.color.colorAccent);
+                    woman.setBackgroundResource(R.drawable.ic_check_select);
+                    man_text.setTextColor(R.color.black);
+                    man.setBackgroundResource(R.drawable.ic_check_unselect);
+                }
+                imageView1.setImageBitmap(getBitmapFromEncodedString(documentSnapshot.getString(Constants.KEY_USER_PROFILE_IMAGE)));
+                notAge.setChecked(documentSnapshot.getBoolean("notShowAge"));
+                notDistance.setChecked(documentSnapshot.getBoolean("notShowDistance"));
+                Log.e("id", preferenceManager.getString(Constants.KEY_USER_ID));
+            }
+        });
+
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,6 +181,7 @@ public class EditProfileActivity extends AppCompatActivity {
             @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View v) {
+                gender = false;
                 women_text.setTextColor(R.color.colorAccent);
                 woman.setBackgroundResource(R.drawable.ic_check_select);
                 man_text.setTextColor(R.color.black);
@@ -108,6 +193,7 @@ public class EditProfileActivity extends AppCompatActivity {
             @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View v) {
+                gender = true;
                 man_text.setTextColor(R.color.colorAccent);
                 man.setBackgroundResource(R.drawable.ic_check_select);
                 women_text.setTextColor(R.color.black);
@@ -123,53 +209,40 @@ public class EditProfileActivity extends AppCompatActivity {
 
             }
         });
-        imageView2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imageView = imageView2;
-                proceedAfterPermission();
-
-            }
-        });
-
-        imageView3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imageView = imageView3;
-                proceedAfterPermission();
-
-            }
-        });
-
-        imageView4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imageView = imageView4;
-                proceedAfterPermission();
-
-            }
-        });
-
-        imageView5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imageView = imageView5;
-                proceedAfterPermission();
-
-            }
-        });
-
-        imageView6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imageView = imageView6;
-                proceedAfterPermission();
-
-            }
-        });
 
 
     }
+
+    public static boolean isDateValid(String date)
+    {
+        try {
+            Calendar c = Calendar.getInstance();
+            int curYear = c.get(Calendar.YEAR);
+            int curMonth = c.get(Calendar.MONTH)+1;
+            int curDay = c.get(Calendar.DAY_OF_MONTH);
+            String[] as = date.split("-");
+            Log.e("as0",as[0]+", "+curMonth);
+            Log.e("as1",as[1]+", "+curDay);
+            Log.e("as2",as[2]+", "+curYear);
+            if(Integer.parseInt(as[2]) <= curYear
+                    && Integer.parseInt(as[1]) <= curDay
+                    && Integer.parseInt(as[0]) <= curMonth) {
+
+                DateFormat df = new SimpleDateFormat("MM-dd-yyyy");
+                df.setLenient(false);
+                df.parse(date);
+                return true;
+            } else {
+                return false;
+            }
+        } catch (ParseException e) {
+            return false;
+        }
+    }
+
+//    private void loadLikeData() {
+//        Log.e("inra", documentReference.getId()+"");
+//    }
 
 
     private void requestMultiplePermissions() {
@@ -358,6 +431,15 @@ public class EditProfileActivity extends AppCompatActivity {
                 //Got Permission
                 proceedAfterPermission();
             }
+        }
+    }
+
+    private Bitmap getBitmapFromEncodedString(String encodedImage) {
+        if (encodedImage != null) {
+            byte[] bytes = Base64.decode(encodedImage, Base64.DEFAULT);
+            return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        } else {
+            return null;
         }
     }
 }
