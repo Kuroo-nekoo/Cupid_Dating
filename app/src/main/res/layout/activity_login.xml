@@ -21,14 +21,14 @@
 
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="163dp"
+                android:layout_height="170dp"
                 android:layout_gravity="center"
                 android:layout_marginBottom="10dp"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="130dp"
-                    android:layout_height="123dp"
+                    android:layout_height="130dp"
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="center_horizontal"
                     android:background="@drawable/logo" />
@@ -38,11 +38,11 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_gravity="center_horizontal"
-                    android:text="Cupid Dating"
                     android:padding="@dimen/_5dp"
+                    android:text="Cupid Dating"
                     android:textColor="#A52222"
-                    android:textStyle="bold"
-                    android:textSize="24dp" />
+                    android:textSize="24dp"
+                    android:textStyle="bold" />
 
             </RelativeLayout>
 
