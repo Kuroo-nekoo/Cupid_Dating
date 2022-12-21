@@ -72,37 +72,23 @@ public class RecentConversationAdapter extends RecyclerView.Adapter<RecentConver
             binding.muiImage.setImageBitmap(getConversationImage(chatMessage.getConversationImage()));
             binding.tvName.setText(chatMessage.getConversationName());
             binding.tvRecentMessage.setText(chatMessage.getMessage());
-            firestore.collection(Constants.KEY_COLLECTION_USERS).document(chatMessage.getConversationId()).get()
-                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                @Override
-                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                    User user = new User();
-                                    user.setUsername(documentSnapshot.getString(Constants.KEY_USER_NAME));
-                                    user.setEmail(documentSnapshot.getString(Constants.KEY_USER_EMAIL));
-                                    user.setProfileImage(documentSnapshot.getString(Constants.KEY_USER_PROFILE_IMAGE));
-                                    user.setToken(documentSnapshot.getString(Constants.KEY_FCM_TOKEN));
-                                    double latitude = documentSnapshot.getDouble(Constants.KEY_USER_LATITUDE);
-                                    double longitude = documentSnapshot.getDouble(Constants.KEY_USER_LONGITUDE);
-                                    user.setLatitude(latitude);
-                                    user.setLongitude(longitude);
-                                    user.setAvailable(documentSnapshot.getLong(Constants.KEY_AVAILABILITY) == 1);
-                                    user.setUser_id(documentSnapshot.getId());
-                                    binding.getRoot().setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            try {
-                                                Intent intent = new Intent(mContext, ChatActivity.class);
-                                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                intent.putExtra(Constants.KEY_USER, user);
-                                                mContext.startActivity(intent);
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
+            binding.getRoot().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        Intent intent = new Intent(mContext, ChatActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra(Constants.KEY_USER, chatMessage.getUser());
+                        mContext.startActivity(intent);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
-                                        }
-                                    });
-                                }
-                            });
+                }
+            });
         }
-    }
+
+
+        }
+
 }

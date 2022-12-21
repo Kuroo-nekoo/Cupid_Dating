@@ -1,6 +1,7 @@
 package com.final_mad.datingapp.datingapp.Matched;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.final_mad.datingapp.datingapp.R;
 import com.final_mad.datingapp.datingapp.Utils.Constants;
 import com.final_mad.datingapp.datingapp.Utils.PreferenceManager;
 import com.final_mad.datingapp.datingapp.Utils.User;
@@ -76,11 +78,11 @@ public class ChatActivity extends BaseActivity {
                         return;
                     }
                     if (value != null) {
-                        if (value.getLong(Constants.KEY_AVAILABILITY) != null) {
-                            int availability = Objects.requireNonNull(
-                                    value.getLong(Constants.KEY_AVAILABILITY)
-                            ).intValue();
-                            isReceiverAvailable = availability == 1;
+                        if (value.getBoolean(Constants.KEY_AVAILABILITY) != null) {
+                            boolean availability = Objects.requireNonNull(
+                                    value.getBoolean(Constants.KEY_AVAILABILITY)
+                            ).booleanValue();
+                            isReceiverAvailable = availability;
                         }
                         receiveUser.setToken(value.getString(Constants.KEY_FCM_TOKEN));
                         if (receiveUser.getProfileImage() == null) {
@@ -166,14 +168,14 @@ public class ChatActivity extends BaseActivity {
             } else {
                 HashMap<String, Object> conversation = new HashMap<>();
                 conversation.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
-                conversation.put(Constants.KEY_SENDER_NAME, preferenceManager.getString(Constants.KEY_SENDER_NAME));
+                conversation.put(Constants.KEY_SENDER_NAME, preferenceManager.getString(Constants.KEY_USER_NAME));
                 conversation.put(Constants.KEY_SENDER_IMAGE, preferenceManager.getString(Constants.KEY_USER_PROFILE_IMAGE));
                 conversation.put(Constants.KEY_RECEIVE_ID, receiveUser.getUser_id());
                 conversation.put(Constants.KEY_RECEIVER_NAME, receiveUser.getUsername());
                 conversation.put(Constants.KEY_RECEIVER_IMAGE, receiveUser.getProfileImage());
                 conversation.put(Constants.KEY_LAST_MESSAGE, binding.etInputMessage.getText().toString());
                 conversation.put(Constants.KEY_TIMESTAMP, new Date());
-                addConversation(conversation );
+                addConversation(conversation);
             }
             if(!isReceiverAvailable) {
                 try {
@@ -201,6 +203,8 @@ public class ChatActivity extends BaseActivity {
     }
 
     private void listenMessages() {
+        String test = preferenceManager.getString(Constants.KEY_USER_ID);
+        String test2 = receiveUser.getUser_id();
         firestore.collection(Constants.KEY_COLLECTION_CHAT)
                 .whereEqualTo(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
                 .whereEqualTo(Constants.KEY_RECEIVE_ID, receiveUser.getUser_id())
@@ -258,7 +262,11 @@ public class ChatActivity extends BaseActivity {
             }
             Collections.sort(chatMessageList, (obj1, obj2) -> obj1.getDateObject().compareTo(obj2.getDateObject()));
             if (count == 0) {
-                chatAdapter.notifyDataSetChanged();
+                try {
+                    ((RecyclerView)findViewById(R.id.rcvChat)).getAdapter().notifyDataSetChanged();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else {
                 chatAdapter.notifyDataSetChanged();
                 chatAdapter.notifyItemRangeInserted(chatMessageList.size(), chatMessageList.size());

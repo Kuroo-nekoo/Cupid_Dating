@@ -1,10 +1,12 @@
 package com.final_mad.datingapp.datingapp.Matched;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 
@@ -15,7 +17,9 @@ import com.final_mad.datingapp.datingapp.Utils.TopNavigationViewHelper;
 import com.final_mad.datingapp.datingapp.Utils.User;
 import com.final_mad.datingapp.datingapp.databinding.ActivityRecentConversationBinding;
 import com.final_mad.datingapp.datingapp.models.ChatMessage;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -43,6 +47,7 @@ public class RecentConversationActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityRecentConversationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        loading(true);
         init();
         listenConversations();
         setupTopNavigationView();
@@ -57,39 +62,36 @@ public class RecentConversationActivity extends BaseActivity {
                 .addSnapshotListener(eventListener);
     }
 
-//    private void listenUserAvailability() {
-//        firestore.collection(Constants.KEY_COLLECTION_USERS)
-//                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-//                        if (error != null) {
-//                            return;
-//                        }
-//                        if (value != null) {
-//                            for (DocumentChange documentChange: value.getDocumentChanges()) {
-//                                if (documentChange.getType() == DocumentChange.Type.MODIFIED) {
-//                                    boolean isOnline = documentChange.getDocument().getBoolean(Constants.KEY_AVAILABILITY);
-//                                    User user = new User();
-//                                    user.setUsername(documentChange.getDocument().getString(Constants.KEY_USER_NAME));
-//                                    user.setEmail(documentChange.getDocument().getString(Constants.KEY_USER_EMAIL));
-//                                    user.setProfileImage(documentChange.getDocument().getString(Constants.KEY_USER_PROFILE_IMAGE));
-//                                    user.setToken(documentChange.getDocument().getString(Constants.KEY_FCM_TOKEN));
-//                                    double latitude = documentChange.getDocument().getDouble(Constants.KEY_USER_LATITUDE);
-//                                    double longitude = documentChange.getDocument().getDouble(Constants.KEY_USER_LONGITUDE);
-//                                    user.setLatitude(latitude);
-//                                    user.setLongitude(longitude);
-//                                    user.setAvailable(documentChange.getDocument().getBoolean(Constants.KEY_AVAILABILITY));
-//                                    user.setDateOfBirth(documentChange.getDocument().getString(Constants.KEY_USER_DATA_OF_BIRTH));
-//                                    user.setUser_id(documentChange.getDocument().getId());
-////                                    if(isOnline && onlineUserList.) {
-//
-//                                    }
-//                                 }
-//                            }
-//                        }
-//                    }
-//                });
-//    }
+    private void listenUserAvailability() {
+        firestore.collection(Constants.KEY_COLLECTION_USERS)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (error != null) {
+                            return;
+                        }
+                        if (value != null) {
+                            for (DocumentChange documentChange: value.getDocumentChanges()) {
+                                if (documentChange.getType() == DocumentChange.Type.MODIFIED) {
+                                    boolean isOnline = documentChange.getDocument().getBoolean(Constants.KEY_AVAILABILITY);
+                                    User user = new User();
+                                    user.setUsername(documentChange.getDocument().getString(Constants.KEY_USER_NAME));
+                                    user.setEmail(documentChange.getDocument().getString(Constants.KEY_USER_EMAIL));
+                                    user.setProfileImage(documentChange.getDocument().getString(Constants.KEY_USER_PROFILE_IMAGE));
+                                    user.setToken(documentChange.getDocument().getString(Constants.KEY_FCM_TOKEN));
+                                    double latitude = documentChange.getDocument().getDouble(Constants.KEY_USER_LATITUDE);
+                                    double longitude = documentChange.getDocument().getDouble(Constants.KEY_USER_LONGITUDE);
+                                    user.setLatitude(latitude);
+                                    user.setLongitude(longitude);
+                                    user.setAvailable(documentChange.getDocument().getBoolean(Constants.KEY_AVAILABILITY));
+                                    user.setDateOfBirth(documentChange.getDocument().getString(Constants.KEY_USER_DATA_OF_BIRTH));
+                                    user.setUser_id(documentChange.getDocument().getId());
+                                 }
+                            }
+                        }
+                    }
+                });
+    }
 
     private void init () {
         preferenceManager = new PreferenceManager(getApplicationContext());
@@ -132,7 +134,28 @@ public class RecentConversationActivity extends BaseActivity {
                     }
                     chatMessage.setMessage(documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE));
                     chatMessage.setDateObject(documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP));
+                    firestore.collection(Constants.KEY_COLLECTION_USERS).document(chatMessage.getConversationId()).get()
+                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    try {
+                                        User user = new User();
+                                        user.setUsername(documentSnapshot.getString(Constants.KEY_USER_NAME));
+                                        user.setEmail(documentSnapshot.getString(Constants.KEY_USER_EMAIL));
+                                        user.setProfileImage(documentSnapshot.getString(Constants.KEY_USER_PROFILE_IMAGE));
+                                        user.setUser_id(documentSnapshot.getId());
+                                        chatMessage.setUser(user);
+                                        Collections.sort(conversationList, (obj1, obj2) -> obj2.getDateObject().compareTo(obj1.getDateObject()));
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+
+                                }
+                            });
                     conversationList.add(chatMessage);
+                    recentConversationAdapter.notifyDataSetChanged();
+                    loading(false);
+
                 } else if (documentChange.getType() == DocumentChange.Type.MODIFIED) {
                     for (int i = 0; i < conversationList.size(); i++) {
                         String senderId = documentChange.getDocument().getString(Constants.KEY_SENDER_ID);
@@ -145,8 +168,18 @@ public class RecentConversationActivity extends BaseActivity {
                     }
                 }
             }
-            Collections.sort(conversationList, (obj1, obj2) -> obj2.getDateObject().compareTo(obj1.getDateObject()));
-            recentConversationAdapter.notifyDataSetChanged();
+
+
         }
     };
+
+    private void loading(boolean isLoading) {
+        if (isLoading) {
+            binding.progressBar.setVisibility(View.VISIBLE);
+            binding.svMain.setVisibility(View.INVISIBLE);
+        } else {
+            binding.progressBar.setVisibility(View.INVISIBLE);
+            binding.svMain.setVisibility(View.VISIBLE);
+        }
+    }
 }

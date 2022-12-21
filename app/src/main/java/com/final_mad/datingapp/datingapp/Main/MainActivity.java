@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.final_mad.datingapp.datingapp.Matched.ChatActivity;
@@ -31,6 +32,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -67,6 +69,7 @@ public class MainActivity extends Activity {
     private ArrayList<User> userList;
     private PhotoAdapter2 photoAdapter;
     private SwipeFlingAdapterView flingContainer;
+    private ProgressBar progressBar;
 
 
 
@@ -81,9 +84,11 @@ public class MainActivity extends Activity {
             preferenceManager = new PreferenceManager(getApplicationContext());
             cardFrame = findViewById(R.id.card_frame);
             moreFrame = findViewById(R.id.more_frame);
+            progressBar = findViewById(R.id.progressBar);
             PulsatorLayout mPulsator = findViewById(R.id.pulsator);
             mPulsator.start();
             mNotificationHelper = new NotificationHelper(this);
+            loading(true);
             setupTopNavigationView();
             getToken();
 
@@ -166,17 +171,18 @@ public class MainActivity extends Activity {
             @Override
             public void onRightCardExit(Object dataObject) {
                 User obj = (User) dataObject;
+                String userId = obj.getUser_id();
 
                 //check matches
                 checkRowItem();
                 DocumentReference documentReference = firestore.collection(Constants.KEY_COLLECTION_USERS).document(preferenceManager.getString(Constants.KEY_USER_ID));
-                documentReference.collection("matchedUser").whereEqualTo("email", obj.getEmail())
+                documentReference.collection("matchedUser").whereEqualTo("user_id", userId)
                         .get()
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful() && task.getResult() != null && task.getResult().getDocumentChanges().size() == 0) {
-                                    documentReference.collection("matchedUser").add(obj);
+                                if(task.isSuccessful() && task.getResult() != null && task.getResult().getDocumentChanges().size() == 0) {
+                                    documentReference.collection("matchedUser").document(userId).set(obj);
                                 }
                             }
                         });
@@ -300,12 +306,14 @@ public class MainActivity extends Activity {
                                                 user.setLongitude(longitude);
                                                 user.setAvailable(queryDocumentSnapshot.getBoolean(Constants.KEY_AVAILABILITY));
                                                 user.setDateOfBirth(queryDocumentSnapshot.getString(Constants.KEY_USER_DATA_OF_BIRTH));
+                                                user.setUser_id(queryDocumentSnapshot.getId());
                                                 userList.add(user);
                                             }
                                             arrayAdapter = new PhotoAdapter(MainActivity.this, R.layout.item, userList);
                                             flingContainer = findViewById(R.id.frame);
                                             flingContainer.setAdapter(arrayAdapter);
                                             arrayAdapter.notifyDataSetChanged();
+                                            loading(false);
 
                                             checkRowItem();
                                             updateSwipeCard();
@@ -321,6 +329,16 @@ public class MainActivity extends Activity {
                         showToast("Unable to update token");
                     }
                 });
+    }
+
+    private void loading(boolean isLoading) {
+        if(isLoading) {
+            progressBar.setVisibility(View.VISIBLE);
+            cardFrame.setVisibility(View.INVISIBLE);
+        } else {
+            progressBar.setVisibility(View.INVISIBLE);
+            cardFrame.setVisibility(View.VISIBLE);
+        }
     }
 
 

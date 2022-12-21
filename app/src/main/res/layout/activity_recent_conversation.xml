@@ -9,57 +9,63 @@
 
     <!-- top navigation -->
     <include layout="@layout/layout_top_navigation_view" />
-
-    <ScrollView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
-
-        <FrameLayout
+        android:layout_height="match_parent">
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:fillViewport="true"
+            android:id="@+id/svMain">
 
-
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_margin="@dimen/_5dp"
-                    android:background="@color/devider" />
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="Recent"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="20sp" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rcvRecentConversation"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="10dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    android:overScrollMode="never"></androidx.recyclerview.widget.RecyclerView>
-            </LinearLayout>
-            <ProgressBar
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_gravity="center"
-                android:visibility="invisible"
-                android:id="@+id/progressBar"/>
-        </FrameLayout>
-    </ScrollView>
+                    android:orientation="vertical">
+
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_margin="@dimen/_5dp"
+                        android:background="@color/devider" />
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="10dp"
+                        android:text="Recent"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="20sp" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcvRecentConversation"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="10dp"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        android:overScrollMode="never"></androidx.recyclerview.widget.RecyclerView>
+                </LinearLayout>
+
+            </FrameLayout>
+        </ScrollView>
+        <ProgressBar
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id="@+id/progressBar"
+            android:layout_gravity="center"
+            android:visibility="invisible"></ProgressBar>
+    </FrameLayout>
+
 </LinearLayout>
 
