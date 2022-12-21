@@ -83,9 +83,9 @@ public class NearbyActivity extends AppCompatActivity {
                                 user.setAvailable(queryDocumentSnapshot.getBoolean(Constants.KEY_AVAILABILITY));
                                 Toast.makeText(getApplicationContext(), "distance" +  Double.toString(gps.calculateDistance(currLatitude, currLongitude,latitude, longitude)), Toast.LENGTH_LONG).show();
 
-                                if(gps.calculateDistance(currLatitude, currLongitude,latitude, longitude) < 3000 && gps.calculateDistance(currLatitude, currLongitude,latitude, longitude) > 1000) {
+                                if(gps.calculateDistance(currLatitude, currLongitude,latitude, longitude) < 10 && gps.calculateDistance(currLatitude, currLongitude,latitude, longitude) > 1) {
                                     try {
-                                        user.setDistance(gps.calculateDistance(currLatitude, currLongitude,latitude, longitude) / 1000);
+                                        user.setDistance(gps.calculateDistance(currLatitude, currLongitude,latitude, longitude));
                                         user.setUser_id(queryDocumentSnapshot.getId());
                                         userList.add(user);
                                     } catch (Exception e) {
