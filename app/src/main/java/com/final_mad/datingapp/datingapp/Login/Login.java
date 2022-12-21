@@ -30,6 +30,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.protobuf.CodedInputStream;
 
 import java.util.HashMap;
 
@@ -109,6 +110,8 @@ public class Login extends AppCompatActivity {
                                                 preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
                                                 preferenceManager.putString(Constants.KEY_USER_ID, documentSnapshot.getId());
                                                 preferenceManager.putString(Constants.KEY_USER_NAME, documentSnapshot.getString(Constants.KEY_USER_NAME));
+                                                String image = documentSnapshot.getString(Constants.KEY_USER_PROFILE_IMAGE);
+                                                preferenceManager.putString(Constants.KEY_USER_PROFILE_IMAGE, documentSnapshot.getString(Constants.KEY_USER_PROFILE_IMAGE));
                                                 Intent intent = new Intent(getApplicationContext(), MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                                 startActivity(intent);
                                             } catch (Exception e) {

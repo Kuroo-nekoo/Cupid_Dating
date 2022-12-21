@@ -1,5 +1,7 @@
 package com.final_mad.datingapp.datingapp.models;
 
+import com.final_mad.datingapp.datingapp.Utils.User;
+
 import java.util.Date;
 
 public class ChatMessage {
@@ -8,6 +10,16 @@ public class ChatMessage {
     private String message;
     private String dateTime;
     private Date dateObject;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    private User user;
 
     public String getConversationId() {
         return conversationId;

@@ -7,13 +7,24 @@
     tools:context=".Nearby.NearbyActivity"
     android:orientation="vertical">
     <include layout="@layout/layout_top_navigation_view" />
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcvNearbyUser"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:listitem="@layout/item_container_neary_user"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        android:layout_margin="20dp"
-        />
+        android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcvNearbyUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/item_container_neary_user"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            android:layout_margin="20dp"
+            />
+        <ProgressBar
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:id="@+id/progressBar"
+            android:visibility="invisible"/>
+    </FrameLayout>
+    
 
 </LinearLayout>

@@ -14,6 +14,8 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.final_mad.datingapp.datingapp.R;
@@ -44,14 +46,17 @@ public class NearbyActivity extends AppCompatActivity {
     private Double currLatitude, currLongitude;
     private GPS gps;
     private ActivityNearbyBinding binding;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityNearbyBinding.inflate(getLayoutInflater());
+        loading(true);
         setContentView(binding.getRoot());
         init();
         setupTopNavigationView();
+
     }
 
     private void getAllUser() {
@@ -93,6 +98,7 @@ public class NearbyActivity extends AppCompatActivity {
                             binding.rcvNearbyUser.setLayoutManager(gridLayoutManager);
                             binding.rcvNearbyUser.setAdapter(nearbyAdapter);
                             nearbyAdapter.notifyDataSetChanged();
+                            loading(false);
                         }
                     }
                 });
@@ -123,6 +129,16 @@ public class NearbyActivity extends AppCompatActivity {
         Menu menu = tvEx.getMenu();
         MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
         menuItem.setChecked(true);
+    }
+
+    private void loading(boolean isLoading) {
+        if(isLoading) {
+            binding.progressBar.setVisibility(View.VISIBLE);
+            binding.rcvNearbyUser.setVisibility(View.INVISIBLE);
+        } else {
+            binding.progressBar.setVisibility(View.INVISIBLE);
+            binding.rcvNearbyUser.setVisibility(View.VISIBLE);
+        }
     }
 
 }
