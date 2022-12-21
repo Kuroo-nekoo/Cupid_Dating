@@ -2,6 +2,7 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:background="#FFE0E0"
     android:layout_height="match_parent">
 
     <com.final_mad.datingapp.datingapp.customfonts.TextViewSemiBold
@@ -10,34 +11,38 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginRight="24dp"
-        android:text="4/5"
-        android:textColor="#747474"
+        android:text="5/5"
+        android:layout_marginTop="@dimen/_10dp"
+        android:textColor="#777777"
         android:textSize="24sp"
         android:textStyle="bold" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="150dp"
+        android:layout_height="170dp"
         android:layout_centerHorizontal="true"
-        android:layout_gravity="center"
-        android:layout_margin="20dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="55dp"
+        android:layout_marginBottom="20dp"
         android:orientation="horizontal">
 
+
         <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_gravity="center_horizontal"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_centerHorizontal="true"
             android:background="@drawable/logo" />
 
         <com.final_mad.datingapp.datingapp.customfonts.TextViewBold
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             android:layout_marginLeft="40dp"
-            android:text="Love Dating"
-            android:textColor="#ff0b00"
-            android:textSize="30dp" />
+            android:text="Cupid Dating"
+            android:textColor="#B3404A"
+            android:textSize="24dp"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 
@@ -45,8 +50,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:orientation="vertical"
-        android:paddingTop="50dp">
+        android:orientation="vertical">
 
 
         <com.final_mad.datingapp.datingapp.customfonts.TextViewBold
@@ -55,10 +59,11 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="24dp"
+            android:layout_marginTop="270dp"
             android:layout_marginRight="24dp"
             android:text="When were you born?"
-            android:textColor="#747474"
-            android:textSize="24sp"
+            android:textColor="#EB7676"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <DatePicker
@@ -70,11 +75,11 @@
             android:layout_marginLeft="24dp"
             android:layout_marginTop="16dp"
             android:layout_marginRight="24dp"
-            android:backgroundTint="#ff4081"
-            android:calendarTextColor="#ff4081"
+            android:backgroundTint="#ffffff"
+            android:calendarTextColor="#ffffff"
             android:calendarViewShown="false"
             android:datePickerMode="spinner"
-            android:yearListSelectorColor="@color/colorPrimaryDark" />
+            android:yearListSelectorColor="#ffffff" />
 
         <com.final_mad.datingapp.datingapp.customfonts.ButtonSemiBold
             android:id="@+id/ageContinueButton"
@@ -84,20 +89,23 @@
             android:layout_marginLeft="24dp"
             android:layout_marginTop="16dp"
             android:layout_marginRight="24dp"
-            android:background="#ff4081"
-            android:backgroundTint="#ff4081"
+            android:background="@drawable/btn_red_gradient_text_white"
             android:elevation="24dp"
+            android:padding="15dp"
             android:text="Continue"
             android:textColor="@android:color/white"
+            android:textSize="20sp"
             android:textStyle="bold" />
+
         <com.final_mad.datingapp.datingapp.customfonts.TextViewSemiBold
             android:id="@+id/tvLinkLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:gravity="center"
             android:text="Already have account? Login"
-            android:textColor="@color/transparentPink"
+            android:textColor="#EB7676"
             android:textSize="16dp" />
     </LinearLayout>
 

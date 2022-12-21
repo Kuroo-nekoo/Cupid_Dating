@@ -3,8 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
-
+    android:background="#FFE0E0"
+    >
+    <com.final_mad.datingapp.datingapp.customfonts.TextViewSemiBold
+        android:id="@+id/numberOfPagesLeft"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="@dimen/_10dp"
+        android:gravity="right"
+        android:text="4/5"
+        android:textColor="#777777"
+        android:textSize="24sp"
+        android:textStyle="bold" />
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -13,7 +25,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
             android:orientation="vertical"
             android:paddingLeft="25dp"
             android:paddingTop="55dp"
@@ -21,25 +32,26 @@
 
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="150dp"
+                android:layout_height="170dp"
                 android:layout_gravity="center"
                 android:layout_marginBottom="30dp"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_gravity="center_horizontal"
-                    android:background="@drawable/logo" />
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:layout_centerHorizontal="true"                    android:background="@drawable/logo" />
 
                 <com.final_mad.datingapp.datingapp.customfonts.TextViewBold
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_marginLeft="40dp"
-                    android:text="Love Dating"
-                    android:textColor="#ff0b00"
-                    android:textSize="30dp" />
+                    android:text="Cupid Dating"
+                    android:layout_centerHorizontal="true"
+                    android:textColor="#B3404A"
+                    android:textStyle="bold"
+                    android:textSize="24dp" />
 
             </RelativeLayout>
 
@@ -48,16 +60,19 @@
                 android:layout_height="match_parent"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
+
                 <com.final_mad.datingapp.datingapp.customfonts.TextViewBold
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:text="First, What is your name ?"
-                    android:textSize="20dp"
-                    android:textFontWeight="700"/>
+                    android:textColor="#EB7676"
+                    android:textFontWeight="700"
+                    android:textSize="20dp" />
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_height="60dp"
                     android:layout_marginBottom="8dp"
                     android:gravity="bottom"
                     app:passwordToggleEnabled="true">
@@ -69,26 +84,40 @@
                         android:background="@drawable/edit_text_focused_bg"
                         android:hint="Username:"
                         android:inputType="textEmailAddress"
-                        android:padding="15dp" />
+                        android:padding="15dp"
+                        android:textSize="14dp" />
                 </com.google.android.material.textfield.TextInputLayout>
+
                 <com.final_mad.datingapp.datingapp.customfonts.TextViewBold
+                    android:id="@+id/tvError"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
                     android:text="error"
-                    android:textColor="@color/red_200"
-                    android:id="@+id/tvError"
-                    />
+                    android:textColor="#EB7676" />
+
                 <com.final_mad.datingapp.datingapp.customfonts.ButtonSemiBold
                     android:id="@+id/btContinue"
-                    android:layout_width="200dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="25dp"
-                    android:layout_marginBottom="25dp"
-                    android:background="@drawable/white_rounded_button"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/btn_red_gradient_text_white"
                     android:padding="15dp"
                     android:text="Continue"
                     android:textColor="@color/white"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
+
+                <com.final_mad.datingapp.datingapp.customfonts.TextViewSemiBold
+                    android:id="@+id/tvLinkLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text="Already have account? Login"
+                    android:textColor="#EB7676"
+                    android:textSize="16dp" />
 
             </LinearLayout>
 

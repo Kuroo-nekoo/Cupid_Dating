@@ -1,33 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Login.RegisterImage"
+    android:background="#FFE0E0"
     android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="170dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="55dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="horizontal">
+
+
+        <ImageView
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/logo" />
+
+        <com.final_mad.datingapp.datingapp.customfonts.TextViewBold
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="40dp"
+            android:text="Cupid Dating"
+            android:textColor="#B3404A"
+            android:textSize="24dp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <com.final_mad.datingapp.datingapp.customfonts.TextViewSemiBold
+        android:id="@+id/numberOfPagesLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="24dp"
+        android:text="6/5"
+        android:textAlignment="textEnd"
+        android:layout_marginTop="@dimen/_10dp"
+        android:textColor="#777777"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
+        >
+
+        <com.final_mad.datingapp.datingapp.customfonts.TextViewBold
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="270dp"
+            android:text="Please choose your avatar "
+            android:textColor="#EB7676"
+            android:textAlignment="center"
+            android:textFontWeight="700"
+            android:textSize="20dp" />
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/ivAvatar"
-        android:layout_width="125dp"
-        android:layout_height="125dp"
-        android:layout_margin="@dimen/_5dp"
-        android:src="@drawable/monkey"
-        app:civ_border_color="@color/devider"
-        app:civ_border_width="1dp"
+        android:layout_width="162dp"
+        android:layout_height="162dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginStart="@dimen/_5dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="@dimen/_5dp"
+        android:layout_marginBottom="@dimen/_5dp"
+        android:src="@drawable/avatar"
+        app:civ_border_color="@color/devider"
+        app:civ_border_width="1dp" />
 
-        />
     <com.final_mad.datingapp.datingapp.customfonts.ButtonSemiBold
         android:id="@+id/btContinue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
-        android:layout_marginTop="16dp"
         android:layout_marginRight="24dp"
-        android:background="#ff4081"
-        android:backgroundTint="#ff4081"
+        android:layout_marginTop="16dp"
+        android:padding="15dp"
+        android:background="@drawable/btn_red_gradient_text_white"
         android:elevation="24dp"
+        android:textSize="20sp"
         android:text="Continue"
         android:textColor="@android:color/white"
         android:textStyle="bold" />
-</LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>
