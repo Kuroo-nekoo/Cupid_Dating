@@ -39,8 +39,8 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="10dp"
-                    android:text="Matches"
-                    android:textColor="@color/colorPrimary"
+                    android:text="Users"
+                    android:textColor="#A52222"
                     android:textSize="20sp" />
 
                 <androidx.recyclerview.widget.RecyclerView

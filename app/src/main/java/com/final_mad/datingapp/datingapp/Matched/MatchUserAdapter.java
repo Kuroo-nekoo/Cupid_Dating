@@ -15,7 +15,10 @@ import android.widget.TextView;
 
 import com.final_mad.datingapp.datingapp.Listeners.UserListener;
 import com.final_mad.datingapp.datingapp.R;
+import com.final_mad.datingapp.datingapp.Utils.CalculateAge;
 import com.final_mad.datingapp.datingapp.Utils.User;
+
+import org.checkerframework.checker.units.qual.C;
 
 import java.util.List;
 
@@ -45,9 +48,13 @@ public class MatchUserAdapter extends RecyclerView.Adapter<MatchUserAdapter.MyVi
 
     @Override
     public void onBindViewHolder(@NonNull MatchUserAdapter.MyViewHolder holder, int position) {
+
         User user = usersList.get(position);
+        String dob = user.getDateOfBirth();
+        int age = new CalculateAge(user.getDateOfBirth()).getAge();
+        String professionString = user.getSex() + ", " + Integer.toString(age);
         holder.name.setText(user.getUsername());
-        holder.profession.setText(user.getUsername());
+        holder.profession.setText(professionString);
         holder.imageView.setImageBitmap(getUserImage(user.getProfileImage()));
         holder.llMatchUserItem.setOnClickListener(new View.OnClickListener() {
             @Override

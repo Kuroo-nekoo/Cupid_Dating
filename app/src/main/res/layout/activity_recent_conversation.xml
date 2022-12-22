@@ -44,7 +44,7 @@
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="10dp"
                         android:text="Recent"
-                        android:textColor="@color/colorPrimary"
+                        android:textColor="#A52222"
                         android:textSize="20sp" />
 
                     <androidx.recyclerview.widget.RecyclerView

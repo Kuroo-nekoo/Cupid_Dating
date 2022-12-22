@@ -21,11 +21,14 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.final_mad.datingapp.datingapp.Matched.BaseActivity;
 import com.final_mad.datingapp.datingapp.Matched.ChatActivity;
 import com.final_mad.datingapp.datingapp.Matched.MatchUserAdapter;
 import com.final_mad.datingapp.datingapp.Matched.Matched_Activity;
 import com.final_mad.datingapp.datingapp.Nearby.NearbyAdapter;
+import com.final_mad.datingapp.datingapp.Utils.CalculateAge;
 import com.final_mad.datingapp.datingapp.Utils.Constants;
+import com.final_mad.datingapp.datingapp.Utils.GPS;
 import com.final_mad.datingapp.datingapp.Utils.PreferenceManager;
 import com.final_mad.datingapp.datingapp.Utils.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -53,7 +56,7 @@ import java.util.List;
 
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends BaseActivity {
     private static final String TAG = "MainActivity";
     private static final int ACTIVITY_NUM = 2;
     final private int MY_PERMISSIONS_REQUEST_LOCATION = 123;
@@ -70,7 +73,7 @@ public class MainActivity extends Activity {
     private PhotoAdapter2 photoAdapter;
     private SwipeFlingAdapterView flingContainer;
     private ProgressBar progressBar;
-
+    private Double currLatitude, currLongitude;
 
 
     @Override
@@ -90,10 +93,19 @@ public class MainActivity extends Activity {
             mNotificationHelper = new NotificationHelper(this);
             loading(true);
             setupTopNavigationView();
-            getToken();
+
 
             // start pulsator
+            firestore.collection(Constants.KEY_COLLECTION_USERS).document(preferenceManager.getString(Constants.KEY_USER_ID)).get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            currLatitude = documentSnapshot.getDouble(Constants.KEY_USER_LATITUDE);
+                            currLongitude= documentSnapshot.getDouble(Constants.KEY_USER_LONGITUDE);
+                            getToken();
 
+                        }
+                    });
 
 
 
@@ -290,26 +302,42 @@ public class MainActivity extends Activity {
                                     @Override
                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                         String currentUserId = preferenceManager.getString(Constants.KEY_USER_ID);
+                                        int currentUserMinAge = preferenceManager.getInt(Constants.KEY_USER_MIN_AGE);
+                                        int currentUserMaxAge = preferenceManager.getInt(Constants.KEY_USER_MAX_AGE);
+                                        int currentUserMaxDistance = preferenceManager.getInt(Constants.KEY_USER_MAX_DISTANCE);
+                                        GPS gps = new GPS(getApplicationContext());
+
                                         if (task.isSuccessful() && task.getResult() != null) {
                                             for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
                                                 if (currentUserId.equals(queryDocumentSnapshot.getId())) {
                                                     continue;
                                                 }
-                                                User user = new User();
-                                                user.setUsername(queryDocumentSnapshot.getString(Constants.KEY_USER_NAME));
-                                                user.setEmail(queryDocumentSnapshot.getString(Constants.KEY_USER_EMAIL));
-                                                user.setProfileImage(queryDocumentSnapshot.getString(Constants.KEY_USER_PROFILE_IMAGE));
-                                                user.setToken(queryDocumentSnapshot.getString(Constants.KEY_FCM_TOKEN));
+
                                                 double latitude = queryDocumentSnapshot.getDouble(Constants.KEY_USER_LATITUDE);
                                                 double longitude = queryDocumentSnapshot.getDouble(Constants.KEY_USER_LONGITUDE);
-                                                user.setLatitude(latitude);
-                                                user.setLongitude(longitude);
-                                                user.setAvailable(queryDocumentSnapshot.getBoolean(Constants.KEY_AVAILABILITY));
-                                                user.setDateOfBirth(queryDocumentSnapshot.getString(Constants.KEY_USER_DATA_OF_BIRTH));
-                                                user.setUser_id(queryDocumentSnapshot.getId());
-                                                user.setNotShowDistance(queryDocumentSnapshot.getBoolean("notShowDistance"));
-                                                user.setNotShowAge(queryDocumentSnapshot.getBoolean("notShowAge"));
-                                                userList.add(user);
+
+                                                int userAge = new CalculateAge(queryDocumentSnapshot.getString(Constants.KEY_USER_DATA_OF_BIRTH)).getAge();
+                                                Double userDistance = gps.calculateDistance(currLatitude, currLongitude, latitude, longitude);
+
+                                                if (queryDocumentSnapshot.getString(Constants.KEY_USER_SEX).equals(preferenceManager.getString(Constants.KEY_USER_PREFER_SEX))
+                                                    && currentUserMinAge < userAge && currentUserMaxAge > userAge
+                                                    && userDistance < currentUserMaxDistance && userDistance > 1
+                                                ) {
+                                                    User user = new User();
+                                                    user.setUsername(queryDocumentSnapshot.getString(Constants.KEY_USER_NAME));
+                                                    user.setEmail(queryDocumentSnapshot.getString(Constants.KEY_USER_EMAIL));
+                                                    user.setProfileImage(queryDocumentSnapshot.getString(Constants.KEY_USER_PROFILE_IMAGE));
+                                                    user.setToken(queryDocumentSnapshot.getString(Constants.KEY_FCM_TOKEN));
+                                                    user.setLatitude(latitude);
+                                                    user.setLongitude(longitude);
+                                                    user.setAvailable(queryDocumentSnapshot.getBoolean(Constants.KEY_AVAILABILITY));
+                                                    user.setDateOfBirth(queryDocumentSnapshot.getString(Constants.KEY_USER_DATA_OF_BIRTH));
+                                                    user.setUser_id(queryDocumentSnapshot.getId());
+                                                    user.setNotShowDistance(queryDocumentSnapshot.getBoolean("notShowDistance"));
+                                                    user.setNotShowAge(queryDocumentSnapshot.getBoolean("notShowAge"));
+                                                    user.setSex(queryDocumentSnapshot.getString(Constants.KEY_USER_SEX));
+                                                    userList.add(user);
+                                                }
                                             }
                                             arrayAdapter = new PhotoAdapter(MainActivity.this, R.layout.item, userList);
                                             flingContainer = findViewById(R.id.frame);

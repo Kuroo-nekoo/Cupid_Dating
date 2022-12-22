@@ -6,8 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import com.final_mad.datingapp.datingapp.Login.Login;
-import com.final_mad.datingapp.datingapp.Login.RegisterEmailPassword;
+import com.final_mad.datingapp.datingapp.Account.Login;
+import com.final_mad.datingapp.datingapp.Account.RegisterEmailPassword;
 import com.final_mad.datingapp.datingapp.R;
 
 

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Login.RegisterImage"
+    tools:context=".Account.RegisterImage"
     android:background="#FFE0E0"
     android:orientation="vertical">
 
@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginRight="24dp"
-        android:text="6/5"
+        android:text="6/7"
         android:textAlignment="textEnd"
         android:layout_marginTop="@dimen/_10dp"
         android:textColor="#777777"
@@ -94,6 +94,16 @@
         android:text="Continue"
         android:textColor="@android:color/white"
         android:textStyle="bold" />
+        <com.final_mad.datingapp.datingapp.customfonts.TextViewSemiBold
+            android:id="@+id/tvLinkLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="25dp"
+            android:gravity="center"
+            android:text="Already have account? Login"
+            android:textColor="#EB7676"
+            android:textSize="16dp" />
     </LinearLayout>
 
 </RelativeLayout>

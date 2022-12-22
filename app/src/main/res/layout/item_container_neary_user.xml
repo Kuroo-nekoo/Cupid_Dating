@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="120dp"
-    android:layout_height="170dp"
+    android:layout_height="160dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="15dp">
+    android:padding="10dp">
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@drawable/logo"
         android:id="@+id/imAvatar"
-        android:layout_gravity="top|center"
+        android:layout_gravity="top"
         />
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,7 +36,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:textStyle="bold"
-                android:textColor="@color/black"/>
+                android:textColor="#A52222"/>
             <ImageView
                 android:layout_marginLeft="5dp"
                 android:layout_width="10dp"

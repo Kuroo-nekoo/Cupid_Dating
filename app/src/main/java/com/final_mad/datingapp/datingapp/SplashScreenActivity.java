@@ -1,13 +1,8 @@
 package com.final_mad.datingapp.datingapp;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,10 +13,9 @@ import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 
-import com.final_mad.datingapp.datingapp.Login.Login;
+import com.final_mad.datingapp.datingapp.Account.Login;
 import com.final_mad.datingapp.datingapp.Utils.PreferenceManager;
 
-import java.lang.ref.PhantomReference;
 import java.util.Timer;
 import java.util.TimerTask;
 

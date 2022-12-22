@@ -101,6 +101,8 @@ public class Matched_Activity extends BaseActivity implements UserListener {
                                         }
                                         try {
                                             User user = new User();
+                                            user.setSex(queryDocumentSnapshot.getString(Constants.KEY_USER_SEX));
+                                            user.setDateOfBirth(queryDocumentSnapshot.getString(Constants.KEY_USER_DATA_OF_BIRTH));
                                             user.setUsername(queryDocumentSnapshot.getString(Constants.KEY_USER_NAME));
                                             user.setEmail(queryDocumentSnapshot.getString(Constants.KEY_USER_EMAIL));
                                             user.setProfileImage(queryDocumentSnapshot.getString(Constants.KEY_USER_PROFILE_IMAGE));

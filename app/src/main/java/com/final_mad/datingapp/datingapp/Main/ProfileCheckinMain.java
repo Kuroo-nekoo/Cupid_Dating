@@ -2,8 +2,12 @@ package com.final_mad.datingapp.datingapp.Main;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.util.Base64;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -42,6 +46,7 @@ public class ProfileCheckinMain extends AppCompatActivity {
         String name = intent.getStringExtra("name");
         String bio = intent.getStringExtra("bio");
         String interest = intent.getStringExtra("interest");
+        String profileImageString = intent.getStringExtra("photo");
         int distance = intent.getIntExtra("distance", 1);
         String append = (distance == 1) ? "mile away" : "miles away";
 
@@ -50,17 +55,15 @@ public class ProfileCheckinMain extends AppCompatActivity {
         profileBio.setText(bio);
         profileInterest.setText(interest);
 
-        profileImageUrl = intent.getStringExtra("photo");
-        switch (profileImageUrl) {
-            case "defaultFemale":
-                Glide.with(mContext).load(R.drawable.default_woman).into(profileImage);
-                break;
-            case "defaultMale":
-                Glide.with(mContext).load(R.drawable.default_man).into(profileImage);
-                break;
-            default:
-                Glide.with(mContext).load(profileImageUrl).into(profileImage);
-                break;
+        profileImage.setImageBitmap(getBitmapFromEncodedString(profileImageString));
+    }
+
+    private Bitmap getBitmapFromEncodedString(String encodedImage) {
+        if (encodedImage != null) {
+            byte[] bytes = Base64.decode(encodedImage, Base64.DEFAULT);
+            return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        } else {
+            return null;
         }
     }
 

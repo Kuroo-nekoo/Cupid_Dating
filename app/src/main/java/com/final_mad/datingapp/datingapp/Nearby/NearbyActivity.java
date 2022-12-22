@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.final_mad.datingapp.datingapp.R;
+import com.final_mad.datingapp.datingapp.Utils.CalculateAge;
 import com.final_mad.datingapp.datingapp.Utils.Constants;
 import com.final_mad.datingapp.datingapp.Utils.GPS;
 import com.final_mad.datingapp.datingapp.Utils.PreferenceManager;
@@ -48,13 +49,26 @@ public class NearbyActivity extends AppCompatActivity {
     private ActivityNearbyBinding binding;
     private ProgressBar progressBar;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityNearbyBinding.inflate(getLayoutInflater());
+        firestore = FirebaseFirestore.getInstance();
         loading(true);
         setContentView(binding.getRoot());
-        init();
+        preferenceManager = new PreferenceManager(getApplicationContext());
+
+        firestore.collection(Constants.KEY_COLLECTION_USERS).document(preferenceManager.getString(Constants.KEY_USER_ID)).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        currLatitude = documentSnapshot.getDouble(Constants.KEY_USER_LATITUDE);
+                        currLongitude= documentSnapshot.getDouble(Constants.KEY_USER_LONGITUDE);
+                        init();
+
+                    }
+                });
         setupTopNavigationView();
     }
 
@@ -83,8 +97,14 @@ public class NearbyActivity extends AppCompatActivity {
                                 user.setNotShowAge(queryDocumentSnapshot.getBoolean("notShowAge"));
                                 user.setNotShowDistance(queryDocumentSnapshot.getBoolean("notShowDistance"));
                                 Toast.makeText(getApplicationContext(), "distance" +  Double.toString(gps.calculateDistance(currLatitude, currLongitude,latitude, longitude)), Toast.LENGTH_LONG).show();
-
-                                if(gps.calculateDistance(currLatitude, currLongitude,latitude, longitude) < 10 && gps.calculateDistance(currLatitude, currLongitude,latitude, longitude) > 1) {
+                                int currentUserMinAge = preferenceManager.getInt(Constants.KEY_USER_MIN_AGE);
+                                int currentUserMaxAge = preferenceManager.getInt(Constants.KEY_USER_MAX_AGE);
+                                int currentUserMaxDistance = preferenceManager.getInt(Constants.KEY_USER_MAX_DISTANCE);
+                                int userAge = new CalculateAge(queryDocumentSnapshot.getString(Constants.KEY_USER_DATA_OF_BIRTH)).getAge();
+                                Double userDistance = gps.calculateDistance(currLatitude, currLongitude, latitude, longitude);
+                                if (queryDocumentSnapshot.getString(Constants.KEY_USER_SEX).equals(preferenceManager.getString(Constants.KEY_USER_PREFER_SEX))
+                                        && currentUserMinAge < userAge && currentUserMaxAge > userAge
+                                        && userDistance < currentUserMaxDistance && userDistance > 1) {
                                     try {
                                         user.setDistance(gps.calculateDistance(currLatitude, currLongitude,latitude, longitude));
                                         user.setUser_id(queryDocumentSnapshot.getId());

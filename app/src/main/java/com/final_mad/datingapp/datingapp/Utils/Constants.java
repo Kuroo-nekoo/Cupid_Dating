@@ -32,6 +32,11 @@ public class Constants {
     public static final String KEY_USER_LONGITUDE = "longitude";
     public static final String KEY_USER_LATITUDE = "latitude";
     public static final String KEY_USER_DATA_OF_BIRTH = "dateOfBirth";
+    public static final String KEY_USER_SEX = "sex";
+    public static final String KEY_USER_PREFER_SEX = "preferSex";
+    public static final String KEY_USER_MIN_AGE = "minAge";
+    public static final String KEY_USER_MAX_AGE = "maxAge";
+    public static final String KEY_USER_MAX_DISTANCE = "maxDistance";
 
     public static HashMap<String, String> remoteMsgHeaders = null;
 

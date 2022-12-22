@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -26,21 +26,25 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".Account.ResetPasswordActivity"
+            android:exported="false" />
+
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@xml/btn_white_text_red" />
 
         <activity
             android:name=".Nearby.NearbyActivity"
-            android:exported="false">
+            android:exported="false" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".Matched.RecentConversationActivity"
-            android:exported="true">
+            android:exported="true" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -48,28 +52,28 @@
         <activity
             android:name=".Matched.ChatActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".Login.RegisterImage"
-            android:exported="false">
+            android:name=".Account.RegisterImage"
+            android:exported="false" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".Login.RegisterUsername"
-            android:exported="false">
+            android:name=".Account.RegisterUsername"
+            android:exported="false" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".Login.ForgotPassword"
-            android:exported="true">
+            android:name=".Account.ForgotPassword"
+            android:exported="true" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -79,7 +83,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
             android:label="@string/title_activity_splash_screen"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -88,32 +92,32 @@
         </activity>
         <activity
             android:name=".Introduction.IntroductionMain"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Login.Login" />
-        <activity android:name=".Login.RegisterEmailPassword" />
+        <activity android:name=".Account.Login" />
+        <activity android:name=".Account.RegisterEmailPassword" />
         <activity android:name=".Matched.Matched_Activity" />
         <activity android:name=".Profile.Profile_Activity" />
         <activity android:name=".Main.ProfileCheckinMain" />
         <activity android:name=".Matched.ProfileCheckinMatched" />
         <activity android:name=".Profile.EditProfileActivity" />
         <activity android:name=".Main.MainActivity" />
-        <activity android:name=".Login.RegisterGender" />
-        <activity android:name=".Login.RegisterGenderPrefection" />
-        <activity android:name=".Login.RegisterAge" />
-        <activity android:name=".Login.RegisterHobby" />
+        <activity android:name=".Account.RegisterGender" />
+        <activity android:name=".Account.RegisterGenderPrefection" />
+        <activity android:name=".Account.RegisterAge" />
+        <activity android:name=".Account.RegisterHobby" />
         <activity android:name=".Profile.SettingsActivity" />
         <activity android:name=".Main.BtnLikeActivity" />
         <activity android:name=".Main.BtnDislikeActivity" />
 
         <service
             android:name=".firebase.MessagingService"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
