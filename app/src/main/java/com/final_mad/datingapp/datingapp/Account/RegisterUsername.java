@@ -23,6 +23,7 @@ public class RegisterUsername extends AppCompatActivity {
         Intent intent = getIntent();
         User user = (User) intent.getSerializableExtra("classUser");
         initWidgets();
+        tvError.setText("");
         btContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
